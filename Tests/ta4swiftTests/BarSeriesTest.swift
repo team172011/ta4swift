@@ -13,10 +13,10 @@ final class BarSeriesTest: Ta4swiftTest {
     func testCreateBar() throws {
         let now = Date();
         let bar = createBar(10,12,9,11,1000,now)
-        assert(bar.openPrice == 10)
-        assert(bar.closePrice == 11)
-        assert(bar.volume == 1000)
-        assert(bar.date == now)
+        XCTAssertTrue(bar.openPrice == 10)
+        XCTAssertTrue(bar.closePrice == 11)
+        XCTAssertTrue(bar.volume == 1000)
+        XCTAssertTrue(bar.date == now)
     }
     
     func testCreateBarSeries() throws {
@@ -25,11 +25,11 @@ final class BarSeriesTest: Ta4swiftTest {
         let barSeries = BarSeries(name: "BarSeriesTest", bars: bars);
         barSeries.addBar(8, 10, 5, 4, 1000, now + 120)
         barSeries.addBar(4, 5, 4, 4, 100, now + 180)
-        assert(barSeries.name == "BarSeriesTest")
-        assert(barSeries.bars[0].date == now)
-        assert(barSeries.bars[1].date == now + 60)
-        assert(barSeries.bars[2].date == now + 120)
-        assert(barSeries.bars[3].closePrice == 4)
+        XCTAssertTrue(barSeries.name == "BarSeriesTest")
+        XCTAssertTrue(barSeries.bars[0].date == now)
+        XCTAssertTrue(barSeries.bars[1].date == now + 60)
+        XCTAssertTrue(barSeries.bars[2].date == now + 120)
+        XCTAssertTrue(barSeries.bars[3].closePrice == 4)
     }
     
     func testBarSeriesIndicatorExtension() throws {
@@ -42,25 +42,25 @@ final class BarSeriesTest: Ta4swiftTest {
         let open = barSeries.open
         let volume = barSeries.volume
         
-        assert(close.getValue(for: 11) == bars[11].closePrice)
-        assert(close.getValue(for: 0) == bars[0].closePrice)
-        assert(close.getValue(for: 1) == bars[1].closePrice)
+        XCTAssertTrue(close.getValue(for: 11) == bars[11].closePrice)
+        XCTAssertTrue(close.getValue(for: 0) == bars[0].closePrice)
+        XCTAssertTrue(close.getValue(for: 1) == bars[1].closePrice)
         
-        assert(high.getValue(for: 11) == bars[11].highPrice)
-        assert(high.getValue(for: 0) == bars[0].highPrice)
-        assert(high.getValue(for: 1) == bars[1].highPrice)
+        XCTAssertTrue(high.getValue(for: 11) == bars[11].highPrice)
+        XCTAssertTrue(high.getValue(for: 0) == bars[0].highPrice)
+        XCTAssertTrue(high.getValue(for: 1) == bars[1].highPrice)
         
-        assert(low.getValue(for: 11) == bars[11].lowPrice)
-        assert(low.getValue(for: 0) == bars[0].lowPrice)
-        assert(low.getValue(for: 1) == bars[1].lowPrice)
+        XCTAssertTrue(low.getValue(for: 11) == bars[11].lowPrice)
+        XCTAssertTrue(low.getValue(for: 0) == bars[0].lowPrice)
+        XCTAssertTrue(low.getValue(for: 1) == bars[1].lowPrice)
         
-        assert(open.getValue(for: 11) == bars[11].openPrice)
-        assert(open.getValue(for: 0) == bars[0].openPrice)
-        assert(open.getValue(for: 1) == bars[1].openPrice)
+        XCTAssertTrue(open.getValue(for: 11) == bars[11].openPrice)
+        XCTAssertTrue(open.getValue(for: 0) == bars[0].openPrice)
+        XCTAssertTrue(open.getValue(for: 1) == bars[1].openPrice)
         
-        assert(volume.getValue(for: 11) == Double(bars[11].volume))
-        assert(volume.getValue(for: 0) == Double(bars[0].volume))
-        assert(volume.getValue(for: 1) == Double(bars[1].volume))
+        XCTAssertTrue(volume.getValue(for: 11) == Double(bars[11].volume))
+        XCTAssertTrue(volume.getValue(for: 0) == Double(bars[0].volume))
+        XCTAssertTrue(volume.getValue(for: 1) == Double(bars[1].volume))
     
     }
     

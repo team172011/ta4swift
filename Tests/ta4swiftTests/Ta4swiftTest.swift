@@ -33,3 +33,33 @@ public class Ta4swiftTest: XCTestCase {
     }
     
 }
+
+/**
+ Debug helper methods for the ta4j testing framework
+ */
+extension Ta4swiftTest {
+    
+    func printValues(_ indicator: BooleanIndicator) {
+        #if Xcode
+        for (i, _) in indicator.barSeries.bars.enumerated() {
+            print("index: \(i) value: \(indicator.getValue(for: i))")
+        }
+        #endif
+    }
+    
+    func printValues(_ indicator: ValueIndicator) {
+        #if Xcode
+        for (i, _) in indicator.barSeries.bars.enumerated() {
+            print("index: \(i) value: \(indicator.getValue(for: i))")
+        }
+        #endif
+    }
+    
+    func printValues(_ rule: Rule, _ barSeries: BarSeries) {
+        #if Xcode
+        for (i, _) in barSeries.bars.enumerated() {
+            print("index: \(i) value: \(rule.isSatisfied(for: i))")
+        }
+        #endif
+    }
+}

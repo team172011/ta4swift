@@ -6,7 +6,10 @@
 
 import Foundation
 
-struct Bar {
+/**
+ A bar is representing financial data like open, high, low, close prices and volume at a specific date
+ */
+public struct Bar {
     
     var openPrice: Double
     var highPrice: Double
@@ -16,12 +19,15 @@ struct Bar {
     var date: Date
 }
 
+/**
+ A bar series is representing a set of bars and should have an name as identifier
+ */
 public class BarSeries {
     
     let name: String
     var bars = [Bar]()
     
-    init(name: String, bars: [Bar]) {
+    public init(name: String, bars: [Bar]) {
         self.name = name;
         self.bars = bars;
     }
@@ -41,31 +47,31 @@ extension BarSeries {
 
 extension BarSeries {
     
-    var close: ClosePriceIndicator {
+    public var close: ClosePriceIndicator {
         get {
             return ClosePriceIndicator(barSeries: self)
         }
     }
     
-    var high: HighPriceIndicator {
+    public var high: HighPriceIndicator {
         get {
             return HighPriceIndicator(barSeries: self)
         }
     }
     
-    var low: LowPriceIndicator {
+    public var low: LowPriceIndicator {
         get {
             return LowPriceIndicator(barSeries: self)
         }
     }
     
-    var open: OpenPriceIndicator {
+    public var open: OpenPriceIndicator {
         get {
             return OpenPriceIndicator(barSeries: self)
         }
     }
     
-    var volume: VolumePriceIndicator {
+    public var volume: VolumePriceIndicator {
         get {
             return VolumePriceIndicator(barSeries: self)
         }
