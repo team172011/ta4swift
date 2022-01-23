@@ -144,7 +144,7 @@ public class SMAIndicator: ValueIndicator {
     let multiplier: Double
     let indicator: ValueIndicator
     
-    init(indicator: ValueIndicator,  barCount: Int){
+    public init(indicator: ValueIndicator,  barCount: Int){
         self.barSeries = indicator.barSeries
         self.indicator = indicator
         self.barCount = barCount

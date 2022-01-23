@@ -45,6 +45,9 @@ extension BarSeries {
     }
 }
 
+/**
+ Extension for basic indicators providing ohlcv values
+ */
 extension BarSeries {
     
     public var close: ClosePriceIndicator {
@@ -79,3 +82,12 @@ extension BarSeries {
 
 }
 
+/**
+ Extension for frequently used indicators like SMA or EMAIndicaor based on the close price
+ */
+extension BarSeries {
+    
+    public func sma(barCount: Int) -> SMAIndicator {
+        return SMAIndicator(indicator: self.close, barCount: barCount)
+    }
+}

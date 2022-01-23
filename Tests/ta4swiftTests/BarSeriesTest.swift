@@ -61,7 +61,17 @@ final class BarSeriesTest: Ta4swiftTest {
         XCTAssertTrue(volume.getValue(for: 11) == Double(bars[11].volume))
         XCTAssertTrue(volume.getValue(for: 0) == Double(bars[0].volume))
         XCTAssertTrue(volume.getValue(for: 1) == Double(bars[1].volume))
+    }
     
+    func testCreateBarSeriesFromFile() throws{
+        let appleBars = readAppleIncSeries("TestAppleInc")
+        printValues(appleBars)
+        let sma = appleBars.sma(barCount: 10)
+        
+        XCTAssertTrue(appleBars.name == "TestAppleInc")
+        XCTAssertTrue(appleBars.bars.count == 252)
+        XCTAssertTrue(sma.barCount == 10)
+        printValues(sma)
     }
     
 }

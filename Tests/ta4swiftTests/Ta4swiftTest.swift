@@ -11,6 +11,34 @@ import XCTest
 
 public class Ta4swiftTest: XCTestCase {
     
+    func readAppleIncSeries(_ name: String) -> BarSeries {
+        let data = readFileAsStringArray(fileName: "appleinc_bars")
+        var bars = [Bar]()
+        for row in data {
+            let entries = row.components(separatedBy: ",")
+            if(entries.count >= 5) {
+                bars.append(Bar(openPrice: Double(entries[1])!, highPrice: Double(entries[2])!, lowPrice: Double(entries[3])!, closePrice: Double(entries[4])!, volume: Int(entries[5])!, date: Date()))
+            }
+
+        }
+        return BarSeries(name: name, bars: bars)
+
+    }
+    
+    func readFileAsStringArray(fileName: String) -> [String]  {
+        if let filePath = Bundle.module.path(forResource: fileName, ofType: "csv"){
+            do {
+                let contents = try String(contentsOfFile: filePath)
+                return contents.components(separatedBy: "\n")
+            } catch {
+                return [String]()
+            }
+        } else {
+            print("no file or content found!")
+            return [String]()
+        }
+    }
+    
     func createBars(_ closePrices: Double...) -> [Bar] {
         var bars = [Bar]()
         let now = Date()
@@ -39,6 +67,9 @@ public class Ta4swiftTest: XCTestCase {
  */
 extension Ta4swiftTest {
     
+    /**
+        Prints all values of this BooleanIndicator on the console if executed in xCode
+     */
     func printValues(_ indicator: BooleanIndicator) {
         #if Xcode
         for (i, _) in indicator.barSeries.bars.enumerated() {
@@ -47,6 +78,9 @@ extension Ta4swiftTest {
         #endif
     }
     
+    /**
+        Prints all values  of this ValueIndicator on the console if executed in xCode
+     */
     func printValues(_ indicator: ValueIndicator) {
         #if Xcode
         for (i, _) in indicator.barSeries.bars.enumerated() {
@@ -55,10 +89,24 @@ extension Ta4swiftTest {
         #endif
     }
     
+    /**
+        Prints all values of this Rule on the console if executed in xCode
+     */
     func printValues(_ rule: Rule, _ barSeries: BarSeries) {
         #if Xcode
         for (i, _) in barSeries.bars.enumerated() {
             print("index: \(i) value: \(rule.isSatisfied(for: i))")
+        }
+        #endif
+    }
+    
+    /**
+        Prints all values of this BarSeries on the console if executed in xCode
+     */
+    func printValues(_ barSeries: BarSeries) {
+        #if Xcode
+        for (i, b) in barSeries.bars.enumerated() {
+            print("index: \(i) value: \(b)")
         }
         #endif
     }

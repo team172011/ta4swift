@@ -27,6 +27,9 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "ta4swiftTests",
-            dependencies: ["ta4swift"]),
+            dependencies: ["ta4swift"],
+            resources: [
+                .process("Resources")
+            ]),
     ]
 )
