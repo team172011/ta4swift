@@ -16,7 +16,13 @@ public struct Bar {
     var lowPrice: Double
     var closePrice: Double
     var volume: Int
-    var date: Date
+    var trades: Int
+    var amount: Double
+    var beginTime: Date
+    var endTime: Date
+    var timePeriod: TimeInterval {
+        endTime.timeIntervalSince(beginTime)
+    }
 }
 
 /**
@@ -40,8 +46,8 @@ public class BarSeries {
 
 extension BarSeries {
     
-    func addBar(_ open: Double, _ high: Double, _ low: Double, _ close: Double, _ volume: Int, _ date: Date) {
-        bars.append(Bar(openPrice: open, highPrice: high, lowPrice: low, closePrice: close, volume: volume, date: date))
+    func addBar(_ open: Double, _ high: Double, _ low: Double, _ close: Double, _ volume: Int, _ trades: Int, _ amount: Double, _ beginTime: Date, _ endTime: Date) {
+        bars.append(Bar(openPrice: open, highPrice: high, lowPrice: low, closePrice: close, volume: volume, trades: trades, amount: amount, beginTime: beginTime, endTime: endTime))
     }
 }
 

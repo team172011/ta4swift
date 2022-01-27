@@ -20,6 +20,10 @@ public protocol ValueIndicator: Indicator{
     func getValue(for index: Int) -> Double
 }
 
+public protocol DateIndicator: Indicator {
+    func getValue(for index: Int) -> Date
+}
+
 public class NumericIndicator: ValueIndicator {
     
     public let delegate: ValueIndicator
@@ -58,6 +62,34 @@ public class ClosePriceIndicator: ValueIndicator {
     public func getValue(for index: Int) -> Double {
         return self.barSeries.bars[index].closePrice
     }
+}
+
+public class BeginDateTimeIndicator: DateIndicator {
+    
+    public var barSeries: BarSeries
+    
+    public init(barSeries: BarSeries) {
+        self.barSeries = barSeries
+    }
+    
+    public func getValue(for index: Int) -> Date {
+        return self.barSeries.bars[index].beginTime
+    }
+    
+}
+
+public class EndDateTimeIndicator: DateIndicator {
+    
+    public var barSeries: BarSeries
+    
+    public init(barSeries: BarSeries) {
+        self.barSeries = barSeries
+    }
+    
+    public func getValue(for index: Int) -> Date {
+        return self.barSeries.bars[index].endTime
+    }
+    
 }
 
 public class OpenPriceIndicator: ValueIndicator {

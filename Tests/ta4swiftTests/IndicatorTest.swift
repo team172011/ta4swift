@@ -57,3 +57,23 @@ final class CrossIndicatorTest: Ta4swiftTest {
         XCTAssertTrue(sma.getValue(for: 18))
     }
 }
+
+final class DateTimeIndicatorTest: Ta4swiftTest {
+    
+    func testCreation() throws {
+        let endTime = Date()
+        let beginTime = endTime - 60
+        
+        let bar = createBar(12.0, 12.8, 11.9, 12.2, 100_000, beginTime, endTime)
+        let barSeries = BarSeries(name: "Test", bars: [bar])
+        let beginTimeIndicator = BeginDateTimeIndicator(barSeries: barSeries)
+        let endTimeIndicator = EndDateTimeIndicator(barSeries: barSeries)
+        
+        XCTAssertTrue(beginTimeIndicator.getValue(for: 0) == beginTime)
+        XCTAssertTrue(endTimeIndicator.getValue(for: 0) == endTime)
+        XCTAssertFalse(endTimeIndicator.getValue(for: 0) == beginTime)
+        XCTAssertFalse(beginTimeIndicator.getValue(for: 0) == endTime)
+        
+    }
+    
+}
