@@ -57,15 +57,15 @@ public class Ta4swiftTest: XCTestCase {
     }
     
     func createBar(_ open: Double, _ high: Double, _ low: Double, _ close: Double, _ volume: Int, _ date: Date) -> Bar {
-        let beginTime = date.addingTimeInterval(TimeInterval(Int.random(in: -28800...(-60))))
-        let endTime = date
+        let beginTime = date
+        let endTime = date.addingTimeInterval(TimeInterval(Int.random(in: 60...28800)))
         return createBar(open, high, low, close, volume, beginTime, endTime)
     }
     
     func createBar(_ open: Double, _ high: Double, _ low: Double, _ close: Double, _ volume: Int, _ beginTime: Date, _ endTime: Date) -> Bar {
         let trades = Int.random(in: 1...5000)
         let amount = Double.random(in: 10_000...100_000)
-        return Bar(openPrice: open, highPrice: high, lowPrice: low, closePrice: close, volume: volume, trades: trades, amount: amount, beginTime: beginTime, endTime: endTime)
+        return Bar(openPrice: open, highPrice: high, lowPrice: low, closePrice: close, volume: volume, beginTime: beginTime, trades: trades, amount: amount, endTime: endTime)
     }
     
 }

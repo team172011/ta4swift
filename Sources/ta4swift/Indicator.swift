@@ -64,7 +64,7 @@ public class ClosePriceIndicator: ValueIndicator {
     }
 }
 
-public class BeginDateTimeIndicator: DateIndicator {
+public class DateTimeIndicator: DateIndicator {
     
     public var barSeries: BarSeries
     
@@ -74,20 +74,6 @@ public class BeginDateTimeIndicator: DateIndicator {
     
     public func getValue(for index: Int) -> Date {
         return self.barSeries.bars[index].beginTime
-    }
-    
-}
-
-public class EndDateTimeIndicator: DateIndicator {
-    
-    public var barSeries: BarSeries
-    
-    public init(barSeries: BarSeries) {
-        self.barSeries = barSeries
-    }
-    
-    public func getValue(for index: Int) -> Date {
-        return self.barSeries.bars[index].endTime
     }
     
 }

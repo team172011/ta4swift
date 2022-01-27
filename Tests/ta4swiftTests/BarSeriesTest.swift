@@ -26,12 +26,12 @@ final class BarSeriesTest: Ta4swiftTest {
         let now = Date();
         let bars = [createBar(10, now), createBar(11, now + 60)]
         let barSeries = BarSeries(name: "BarSeriesTest", bars: bars);
-        barSeries.addBar(8, 10, 5, 4, 1000, 800, 12_000.0, now, now + 120)
-        barSeries.addBar(4, 5, 4, 4, 100, 1000, 8000, now, now + 180)
+        barSeries.addBar(8, 10, 5, 4, 1000, now + 120)
+        barSeries.addBar(4, 5, 4, 4, 100, now + 180)
         XCTAssertTrue(barSeries.name == "BarSeriesTest")
-        XCTAssertTrue(barSeries.bars[0].endTime == now)
-        XCTAssertTrue(barSeries.bars[1].endTime == now + 60)
-        XCTAssertTrue(barSeries.bars[2].endTime == now + 120)
+        XCTAssertTrue(barSeries.bars[0].beginTime == now)
+        XCTAssertTrue(barSeries.bars[1].beginTime == now + 60)
+        XCTAssertTrue(barSeries.bars[2].beginTime == now + 120)
         XCTAssertTrue(barSeries.bars[3].closePrice == 4)
     }
     
