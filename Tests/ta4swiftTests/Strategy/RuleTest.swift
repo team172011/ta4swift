@@ -2,14 +2,14 @@
 //  File.swift
 //  
 //
-//  Created by Simon-Justus Wimmer on 17.01.22.
+//  Created by Simon-Justus Wimmer on 24.01.22.
 //
 
 import Foundation
-import ta4swift
+@testable import ta4swift
 import XCTest
 
-public class StrategyTest: Ta4swiftTest {
+final class RuleTes: Ta4swiftTest {
     
     let falseRule = BooleanRule(false)
     let falseRule2 = BooleanRule(false)
@@ -55,7 +55,7 @@ public class StrategyTest: Ta4swiftTest {
         XCTAssertFalse(xOrRule2.isSatisfied(for: 0))
         XCTAssertFalse(xOrRule2.isSatisfied(for: 5))
     }
-    
+
     func testCrossedDownRule() throws {
         let barSeries = BarSeries(name: "Test", bars: createBars(1,2,3,4,5,6,7,8,9,10,11,10,9,3,7,3,8,9,10))
         let close = barSeries.close;
@@ -67,7 +67,7 @@ public class StrategyTest: Ta4swiftTest {
         XCTAssertTrue(rule.isSatisfied(for: 13))
         XCTAssertTrue(rule.isSatisfied(for: 15))
     }
-    
+
     func testCrossedUpRule() throws {
         let barSeries = BarSeries(name: "Test", bars: createBars(1,2,3,4,5,6,7,8,9,1,5,10,9,8,7,6,8,9,10))
         let close = barSeries.close;
@@ -79,24 +79,5 @@ public class StrategyTest: Ta4swiftTest {
         XCTAssertFalse(rule.isSatisfied(for: 9))
         XCTAssertTrue(rule.isSatisfied(for: 10))
         XCTAssertFalse(rule.isSatisfied(for: 13))
-    }
-    
-    func testStrategy() throws {
-        let barSeries = BarSeries(name: "Test", bars: createBars(1,2,3,4,5,6,7,8,9,1,5,10,9,8,7,6,8,9,10))
-        let close = barSeries.close;
-        let entryRule = CrossedUpRule(indicator1: close, treshold: 4);
-        let exitRule = CrossedDownRule(indicator1: close, treshold: 4);
-        
-        var strategy = BaseStrategy(entryRule: entryRule, exitRule: exitRule)
-        
-        XCTAssertTrue(strategy.unstablePeriod == 0)
-        XCTAssertFalse(strategy.isUnstableAt(index: 0))
-        XCTAssertFalse(strategy.isUnstableAt(index: 1))
-        
-        strategy.unstablePeriod = 2
-        
-        XCTAssertTrue(strategy.isUnstableAt(index: 0))
-        XCTAssertTrue(strategy.isUnstableAt(index: 1))
-        XCTAssertFalse(strategy.isUnstableAt(index: 2))
     }
 }
