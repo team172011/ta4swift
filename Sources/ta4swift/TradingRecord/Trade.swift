@@ -7,8 +7,30 @@
 
 import Foundation
 
+public enum TradeType {
+    case BUY
+    case SELL
+}
 
-public struct Trade {
-    let type: TradeType
-    let index: Int
+public protocol Trade {
+    var type: TradeType { get }
+    var index: Int { get }
+}
+
+public extension Trade {
+    
+    var opposite: TradeType {
+        get {
+            if self.type == TradeType.SELL {
+                return TradeType.BUY
+            }
+            return TradeType.SELL
+        }
+    }
+}
+
+public struct BaseTrade: Trade {
+    public let type: TradeType
+    public let index: Int
+    
 }
