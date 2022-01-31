@@ -27,7 +27,7 @@ extension ValueIndicator {
     }
 }
 
-public class ClosePriceIndicator: ValueIndicator {
+public struct ClosePriceIndicator: ValueIndicator {
     
     public var barSeries: BarSeries
     
@@ -40,7 +40,7 @@ public class ClosePriceIndicator: ValueIndicator {
     }
 }
 
-public class OpenPriceIndicator: ValueIndicator {
+public struct OpenPriceIndicator: ValueIndicator {
     
     public var barSeries: BarSeries
     
@@ -53,7 +53,7 @@ public class OpenPriceIndicator: ValueIndicator {
     }
 }
 
-public class HighPriceIndicator: ValueIndicator {
+public struct HighPriceIndicator: ValueIndicator {
     
     public var barSeries: BarSeries
     
@@ -66,7 +66,7 @@ public class HighPriceIndicator: ValueIndicator {
     }
 }
 
-public class LowPriceIndicator: ValueIndicator {
+public struct LowPriceIndicator: ValueIndicator {
     
     public var barSeries: BarSeries
     
@@ -79,7 +79,7 @@ public class LowPriceIndicator: ValueIndicator {
     }
 }
 
-public class VolumePriceIndicator: ValueIndicator {
+public struct VolumePriceIndicator: ValueIndicator {
     
     public var barSeries: BarSeries
     

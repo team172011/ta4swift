@@ -8,7 +8,7 @@
 import Foundation
 
 // returns true indicator1 crosses down indicator2/constant value
-public class CrossedIndicator: BooleanIndicator {
+public struct CrossedIndicator: BooleanIndicator {
     
     public var barSeries: BarSeries
     public var indicator1: ValueIndicator
@@ -21,11 +21,11 @@ public class CrossedIndicator: BooleanIndicator {
         self.indicator2 = indicator2
     }
     
-    public convenience init(indicator: ValueIndicator, constant: Double) {
+    public init(indicator: ValueIndicator, constant: Double) {
         self.init(indicator1: indicator, indicator2: ConstantValueIndicator(barSeries: indicator.barSeries, constant: constant))
     }
     
-    public convenience init(constant: Double, indicator: ValueIndicator) {
+    public init(constant: Double, indicator: ValueIndicator) {
         self.init(indicator1: ConstantValueIndicator(barSeries: indicator.barSeries, constant: constant), indicator2: indicator)
     }
     

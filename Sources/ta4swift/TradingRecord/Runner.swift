@@ -12,6 +12,7 @@ public struct Runner {
     func run(strategy: Strategy, type: TradeType) -> TradingRecord {
         let record = BaseTradingRecord();
         
+        
         return record
     }
 }

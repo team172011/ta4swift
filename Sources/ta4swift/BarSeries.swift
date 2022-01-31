@@ -90,4 +90,8 @@ extension BarSeries {
     public func sma(barCount: Int) -> SMAIndicator {
         return SMAIndicator(indicator: self.close, barCount: barCount)
     }
+    
+    public func ema(barCount: Int) -> EMAIndicator {
+        return EMAIndicator(indicator: self.close, barCount: barCount)
+    }
 }
