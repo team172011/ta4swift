@@ -71,5 +71,4 @@ public struct NumericIndicator: ValueIndicator, NumericOperations {
         return delegate.getValue(for: index)
     }
     
-    
 }

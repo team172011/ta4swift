@@ -50,33 +50,33 @@ extension BarSeries {
  */
 extension BarSeries {
     
-    public var close: ClosePriceIndicator {
+    public var close: NumericIndicator {
         get {
-            return ClosePriceIndicator(barSeries: self)
+            return NumericIndicator(of: ClosePriceIndicator(barSeries: self))
         }
     }
     
-    public var high: HighPriceIndicator {
+    public var high: NumericIndicator {
         get {
-            return HighPriceIndicator(barSeries: self)
+            return NumericIndicator(of: HighPriceIndicator(barSeries: self))
         }
     }
     
-    public var low: LowPriceIndicator {
+    public var low: NumericIndicator {
         get {
-            return LowPriceIndicator(barSeries: self)
+            return NumericIndicator(of: LowPriceIndicator(barSeries: self))
         }
     }
     
-    public var open: OpenPriceIndicator {
+    public var open: NumericIndicator {
         get {
-            return OpenPriceIndicator(barSeries: self)
+            return NumericIndicator(of: OpenPriceIndicator(barSeries: self))
         }
     }
     
-    public var volume: VolumePriceIndicator {
+    public var volume: NumericIndicator {
         get {
-            return VolumePriceIndicator(barSeries: self)
+            return NumericIndicator(of: VolumePriceIndicator(barSeries: self))
         }
     }
 

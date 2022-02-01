@@ -12,7 +12,7 @@ import XCTest
 final class TradeTest: Ta4swiftTest {
     
     func testTrade() throws {
-        let trade = BaseTrade(type: TradeType.SELL, index: 2)
-        XCTAssertEqual(trade.opposite, TradeType.BUY)
+        let trade = BaseTrade(type: TradeType.sell, index: 2)
+        XCTAssertEqual(trade.type.opposite, TradeType.buy)
     }
 }
