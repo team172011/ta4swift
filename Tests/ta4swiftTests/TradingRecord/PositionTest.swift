@@ -17,10 +17,10 @@ final class PositionTest: Ta4swiftTest {
         var position = BasePosition()
         XCTAssertFalse(position.isOpen)
         
-        position.entry = BaseTrade(type: TradeType.BUY, index: 2)
+        position.entry = BaseTrade(type: TradeType.buy, index: 2)
         XCTAssertTrue(position.isOpen)
         
-        position.exit  = BaseTrade(type: TradeType.SELL, index: 3)
+        position.exit  = BaseTrade(type: TradeType.sell, index: 3)
         XCTAssertFalse(position.isOpen)
     }
 }

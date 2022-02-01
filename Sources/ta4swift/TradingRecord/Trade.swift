@@ -6,31 +6,36 @@
 //
 
 import Foundation
+import CloudKit
 
 public enum TradeType {
-    case BUY
-    case SELL
+    case buy
+    case sell
 }
 
-public protocol Trade {
+public protocol Trade: CustomStringConvertible{
     var type: TradeType { get }
     var index: Int { get }
 }
 
-public extension Trade {
+public extension TradeType {
     
     var opposite: TradeType {
         get {
-            if self.type == TradeType.SELL {
-                return TradeType.BUY
+            if self == TradeType.sell {
+                return TradeType.buy
             }
-            return TradeType.SELL
+            return TradeType.sell
         }
     }
 }
 
-public struct BaseTrade: Trade {
+public struct BaseTrade: Trade, CustomStringConvertible {
     public let type: TradeType
     public let index: Int
+    
+    public var description: String {
+        return "\(type) at: \(index)"
+    }
     
 }

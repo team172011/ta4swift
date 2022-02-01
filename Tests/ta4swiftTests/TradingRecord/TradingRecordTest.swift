@@ -13,8 +13,8 @@ import XCTest
 final public class TradingRecordTest: Ta4swiftTest {
     
     public func testTradingRecord() {
-        let tradeA = BaseTrade(type: .BUY, index: 1)
-        let tradeB = BaseTrade(type: .SELL, index: 3)
+        let tradeA = BaseTrade(type: .buy, index: 1)
+        let tradeB = BaseTrade(type: .sell, index: 3)
         
         var record = BaseTradingRecord()
         XCTAssertFalse(record.hasOpenPosition)

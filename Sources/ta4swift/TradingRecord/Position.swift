@@ -20,9 +20,13 @@ public extension Position {
     }
 }
 
-public struct BasePosition: Position {
+public struct BasePosition: Position, CustomStringConvertible  {
     public var entry: Trade?
     public var exit: Trade?
+    
+    public var description: String {
+        return "Position[Entry: \(entry?.description ?? "") Exit: \(exit?.description ?? "")]"
+    }
     
     public init() {}
     
