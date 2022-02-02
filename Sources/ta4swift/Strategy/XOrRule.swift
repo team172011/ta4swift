@@ -12,9 +12,10 @@ public struct XOrRule: Rule {
     let rule1: Rule
     let rule2: Rule
     
-    public init(rule1: Rule, rule2: Rule) {
-        self.rule1 = rule1
-        self.rule2 = rule2
+    public init(_ rules: () -> (Rule, Rule)) {
+        let r = rules()
+        self.rule1 = r.0
+        self.rule2 = r.1
     }
     
     public func isSatisfied(for index: Int) -> Bool{

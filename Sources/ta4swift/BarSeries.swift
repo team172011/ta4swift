@@ -52,35 +52,39 @@ extension BarSeries {
     
     public var close: NumericIndicator {
         get {
-            return NumericIndicator(of: ClosePriceIndicator(barSeries: self))
+            return NumericIndicator{ ClosePriceIndicator(barSeries: self) }
         }
     }
+                                                         
     
     public var high: NumericIndicator {
         get {
-            return NumericIndicator(of: HighPriceIndicator(barSeries: self))
+            return NumericIndicator{ HighPriceIndicator(barSeries: self) }
+        }
+    }
+                                                         
+    public var low: NumericIndicator {
+        get {
+            return NumericIndicator{ LowPriceIndicator(barSeries: self)}
         }
     }
     
-    public var low: NumericIndicator {
-        get {
-            return NumericIndicator(of: LowPriceIndicator(barSeries: self))
-        }
-    }
     
     public var open: NumericIndicator {
         get {
-            return NumericIndicator(of: OpenPriceIndicator(barSeries: self))
+            return NumericIndicator{ OpenPriceIndicator(barSeries: self) }
         }
     }
     
+    
     public var volume: NumericIndicator {
         get {
-            return NumericIndicator(of: VolumePriceIndicator(barSeries: self))
+            return NumericIndicator{ VolumePriceIndicator(barSeries: self) }
         }
     }
-
+    
 }
+                                                         
 
 /**
  Extension for frequently used indicators like SMA or EMAIndicaor based on the close price

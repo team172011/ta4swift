@@ -23,7 +23,7 @@ public protocol ValueIndicator: Indicator{
 extension ValueIndicator {
     
     func numeric() -> NumericIndicator {
-        return NumericIndicator(of: self);
+        return NumericIndicator{self};
     }
 }
 

@@ -9,20 +9,18 @@ import Foundation
 
 public struct OrRule: Rule {
     
-    public let rule1: Rule
-    public let rule2: Rule
+    public let rules: [Rule]
     
-    public init(rule1: Rule, rule2: Rule) {
-        self.rule1 = rule1
-        self.rule2 = rule2
+    public init(_ rule: () -> [Rule]) {
+        self.rules = rule()
     }
     
     public func isSatisfied(for index: Int) -> Bool{
-        return rule1.isSatisfied(for: index) || rule2.isSatisfied(for: index)
+        return rules.contains{ rule in rule.isSatisfied(for: index)}
     }
     
     public func isSatisfied(for index: Int, record: TradingRecord) -> Bool{
-        return rule1.isSatisfied(for: index, record: record) || rule2.isSatisfied(for: index, record: record)
+        return rules.contains{rule in rule.isSatisfied(for: index, record: record)}
     }
     
 }

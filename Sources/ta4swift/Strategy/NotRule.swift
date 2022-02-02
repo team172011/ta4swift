@@ -11,8 +11,8 @@ public struct NotRule: Rule {
     
     public let rule: Rule
     
-    public init(rule: Rule) {
-        self.rule = rule
+    public init(_ rule: () -> Rule) {
+        self.rule = rule()
     }
     
     public func isSatisfied(for index: Int) -> Bool{
