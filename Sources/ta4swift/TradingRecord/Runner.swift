@@ -13,12 +13,12 @@ public struct Runner {
         var record = BaseTradingRecord();
         
         for (i,_) in barSeries.bars.enumerated() {
-            if strategy.shouldEnter(index: i, record: record) {
-                if strategy.canEnter(record: record) {
+            if strategy.shouldEnter(barSeries, index: i, record: record) {
+                if strategy.canEnter(barSeries, record: record) {
                     try! record.addPosition(with: BaseTrade(type: type, index: i))
                 }
-            } else if strategy.shouldExit(index: i, record: record) {
-                if strategy.canExit(record: record) {
+            } else if strategy.shouldExit(barSeries, index: i, record: record) {
+                if strategy.canExit(barSeries, record: record) {
                     try! record.closePosition(with: BaseTrade(type: type.opposite, index: i))
                 }
             }

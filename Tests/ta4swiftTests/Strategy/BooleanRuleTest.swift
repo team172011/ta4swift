@@ -13,13 +13,14 @@ import XCTest
 final class BooleanRuleTest: Ta4swiftTest {
     
     func testBooleanRule() throws {
-        let trueRule = BooleanRule(true)
-        let falseRule = BooleanRule(false)
+        let barSeries = BarSeries(name: "Test");
+        let trueRule = BooleanRule{ true }
+        let falseRule = BooleanRule{ false }
         
-        XCTAssertTrue(trueRule.isSatisfied(for: 0))
-        XCTAssertTrue(trueRule.isSatisfied(for: 100))
+        XCTAssertTrue(trueRule.isSatisfied(barSeries, for: 0))
+        XCTAssertTrue(trueRule.isSatisfied(barSeries, for: 100))
         
-        XCTAssertFalse(falseRule.isSatisfied(for: 0))
-        XCTAssertFalse(falseRule.isSatisfied(for: 100))
+        XCTAssertFalse(falseRule.isSatisfied(barSeries, for: 0))
+        XCTAssertFalse(falseRule.isSatisfied(barSeries, for: 100))
     }
 }

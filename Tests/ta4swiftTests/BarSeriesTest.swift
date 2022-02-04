@@ -42,25 +42,25 @@ final class BarSeriesTest: Ta4swiftTest {
         let open = barSeries.open
         let volume = barSeries.volume
         
-        XCTAssertTrue(close.getValue(for: 11) == bars[11].closePrice)
-        XCTAssertTrue(close.getValue(for: 0) == bars[0].closePrice)
-        XCTAssertTrue(close.getValue(for: 1) == bars[1].closePrice)
+        XCTAssertTrue(close.f(barSeries, 11) == bars[11].closePrice)
+        XCTAssertTrue(close.f(barSeries, 0) == bars[0].closePrice)
+        XCTAssertTrue(close.f(barSeries, 1) == bars[1].closePrice)
         
-        XCTAssertTrue(high.getValue(for: 11) == bars[11].highPrice)
-        XCTAssertTrue(high.getValue(for: 0) == bars[0].highPrice)
-        XCTAssertTrue(high.getValue(for: 1) == bars[1].highPrice)
+        XCTAssertTrue(high.f(barSeries, 11) == bars[11].highPrice)
+        XCTAssertTrue(high.f(barSeries, 0) == bars[0].highPrice)
+        XCTAssertTrue(high.f(barSeries, 1) == bars[1].highPrice)
         
-        XCTAssertTrue(low.getValue(for: 11) == bars[11].lowPrice)
-        XCTAssertTrue(low.getValue(for: 0) == bars[0].lowPrice)
-        XCTAssertTrue(low.getValue(for: 1) == bars[1].lowPrice)
+        XCTAssertTrue(low.f(barSeries, 11) == bars[11].lowPrice)
+        XCTAssertTrue(low.f(barSeries, 0) == bars[0].lowPrice)
+        XCTAssertTrue(low.f(barSeries, 1) == bars[1].lowPrice)
         
-        XCTAssertTrue(open.getValue(for: 11) == bars[11].openPrice)
-        XCTAssertTrue(open.getValue(for: 0) == bars[0].openPrice)
-        XCTAssertTrue(open.getValue(for: 1) == bars[1].openPrice)
+        XCTAssertTrue(open.f(barSeries, 11) == bars[11].openPrice)
+        XCTAssertTrue(open.f(barSeries, 0) == bars[0].openPrice)
+        XCTAssertTrue(open.f(barSeries, 1) == bars[1].openPrice)
         
-        XCTAssertTrue(volume.getValue(for: 11) == Double(bars[11].volume))
-        XCTAssertTrue(volume.getValue(for: 0) == Double(bars[0].volume))
-        XCTAssertTrue(volume.getValue(for: 1) == Double(bars[1].volume))
+        XCTAssertTrue(volume.f(barSeries, 11) == Double(bars[11].volume))
+        XCTAssertTrue(volume.f(barSeries, 0) == Double(bars[0].volume))
+        XCTAssertTrue(volume.f(barSeries, 1) == Double(bars[1].volume))
     }
     
     func testCreateBarSeriesFromFile() throws{
@@ -70,8 +70,7 @@ final class BarSeriesTest: Ta4swiftTest {
         
         XCTAssertTrue(appleBars.name == "TestAppleInc")
         XCTAssertTrue(appleBars.bars.count == 252)
-        XCTAssertTrue(sma.barCount == 10)
-        printValues(sma)
+        printValues(appleBars, sma)
     }
     
 }

@@ -18,12 +18,12 @@ public struct XOrRule: Rule {
         self.rule2 = r.1
     }
     
-    public func isSatisfied(for index: Int) -> Bool{
-        return rule1.isSatisfied(for: index) ^ rule2.isSatisfied(for: index)
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int) -> Bool{
+        return rule1.isSatisfied(barSeries, for: index) ^ rule2.isSatisfied(barSeries, for: index)
     }
     
-    public func isSatisfied(for index: Int, record: TradingRecord) -> Bool{
-        return rule1.isSatisfied(for: index, record: record) ^ rule2.isSatisfied(for: index, record: record)
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int, record: TradingRecord) -> Bool{
+        return rule1.isSatisfied(barSeries, for: index, record: record) ^ rule2.isSatisfied(barSeries, for: index, record: record)
     }
     
 }

@@ -9,8 +9,8 @@ import Foundation
 
 public protocol Rule {
     
-    func isSatisfied(for index: Int) -> Bool
-    func isSatisfied(for index: Int, record: TradingRecord) -> Bool
+    func isSatisfied(_ barSeries: BarSeries, for index: Int) -> Bool
+    func isSatisfied(_ barSeries: BarSeries, for index: Int, record: TradingRecord) -> Bool
 }
 
 extension Rule {

@@ -15,10 +15,10 @@ public protocol Strategy {
     
     func isUnstableAt(index: Int) -> Bool
     
-    func shouldEnter(index: Int, record: TradingRecord) -> Bool
-    func shouldExit(index: Int, record: TradingRecord) -> Bool
+    func shouldEnter(_ barSeries: BarSeries, index: Int, record: TradingRecord) -> Bool
+    func shouldExit(_ barSeries: BarSeries, index: Int, record: TradingRecord) -> Bool
     
-    func canEnter(record: TradingRecord) -> Bool
-    func canExit(record: TradingRecord) -> Bool
+    func canEnter(_ barSeries: BarSeries, record: TradingRecord) -> Bool
+    func canExit(_ barSeries: BarSeries, record: TradingRecord) -> Bool
     
 }

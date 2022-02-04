@@ -20,14 +20,14 @@ public struct CrossedUpRule: Rule {
     }
     
     public init(indicator1: ValueIndicator, treshold: Double) {
-        self.indicator = CrossedIndicator(constant: treshold, indicator: indicator1)
+        self.indicator = CrossedIndicator(constant: treshold, indicator2: indicator1)
     }
     
-    public func isSatisfied(for index: Int) -> Bool {
-        return indicator.getValue(for: index)
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int) -> Bool {
+        return indicator.f(barSeries, index)
     }
     
-    public func isSatisfied(for index: Int, record: TradingRecord) -> Bool {
-        return isSatisfied(for: index)
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int, record: TradingRecord) -> Bool {
+        return isSatisfied(barSeries, for: index)
     }
 }

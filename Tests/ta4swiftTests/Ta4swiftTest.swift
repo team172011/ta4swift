@@ -70,10 +70,10 @@ extension Ta4swiftTest {
     /**
         Prints all values of this BooleanIndicator on the console if executed in xCode
      */
-    func printValues(_ indicator: BooleanIndicator) {
+    func printValues(_ barSeries: BarSeries, _ indicator: BooleanIndicator) {
         #if Xcode
-        for (i, _) in indicator.barSeries.bars.enumerated() {
-            print("index: \(i) value: \(indicator.getValue(for: i))")
+        for (i, _) in barSeries.bars.enumerated() {
+            print("index: \(i) value: \(indicator.f(barSeries, i))")
         }
         #endif
     }
@@ -81,10 +81,10 @@ extension Ta4swiftTest {
     /**
         Prints all values  of this ValueIndicator on the console if executed in xCode
      */
-    func printValues(_ indicator: ValueIndicator) {
+    func printValues(_ barSeries: BarSeries, _ indicator: ValueIndicator) {
         #if Xcode
-        for (i, _) in indicator.barSeries.bars.enumerated() {
-            print("index: \(i) value: \(indicator.getValue(for: i))")
+        for (i, _) in barSeries.bars.enumerated() {
+            print("index: \(i) value: \(indicator.f(barSeries, i))")
         }
         #endif
     }
@@ -95,7 +95,7 @@ extension Ta4swiftTest {
     func printValues(_ rule: Rule, _ barSeries: BarSeries) {
         #if Xcode
         for (i, _) in barSeries.bars.enumerated() {
-            print("index: \(i) value: \(rule.isSatisfied(for: i))")
+            print("index: \(i) value: \(rule.isSatisfied(barSeries, for: i))")
         }
         #endif
     }

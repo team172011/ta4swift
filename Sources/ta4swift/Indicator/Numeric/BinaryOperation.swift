@@ -9,11 +9,7 @@ import Foundation
 
 public struct BinaryOperation: ValueIndicator {
     
-    public var barSeries: BarSeries
-    public let left: ValueIndicator
-    public let right: ValueIndicator
-    
-    let operation: (Double, Double) -> Double
+    public var f: (BarSeries, Int) -> Double
     
     static func sum(left: ValueIndicator, right: ValueIndicator) -> BinaryOperation {
         return BinaryOperation(left: left, right: right) { $0 + $1 }
@@ -40,14 +36,9 @@ public struct BinaryOperation: ValueIndicator {
     }
     
     public init(left: ValueIndicator, right: ValueIndicator, _ operation: @escaping (Double, Double) -> Double) {
-        self.barSeries = left.barSeries
-        self.left = left
-        self.right = right
-        self.operation = operation
+        
+        self.f = { operation(left.f($0, $1), right.f($0, $1)) }
     }
     
-    public func getValue(for index: Int) -> Double {
-        return operation(left.getValue(for: index), right.getValue(for: index));
-    }
     
 }

@@ -5,89 +5,39 @@
 //
 import Foundation
 
-public protocol Indicator {
+public protocol BooleanIndicator {
     
-    var barSeries: BarSeries { get }
+    var f: (BarSeries, Int) -> Bool { get }
+    
 }
 
-public protocol BooleanIndicator: Indicator {
+public protocol ValueIndicator {
     
-    func getValue(for index: Int) -> Bool
-}
-
-public protocol ValueIndicator: Indicator{
-    
-    func getValue(for index: Int) -> Double
-}
-
-extension ValueIndicator {
-    
-    func numeric() -> NumericIndicator {
-        return NumericIndicator{self};
-    }
+    var f: (BarSeries, Int) -> Double { get }
 }
 
 public struct ClosePriceIndicator: ValueIndicator {
     
-    public var barSeries: BarSeries
+    public var f: (BarSeries, Int) -> Double = {$0.bars[$1].closePrice}
     
-    public init(barSeries: BarSeries){
-        self.barSeries = barSeries;
-    }
-    
-    public func getValue(for index: Int) -> Double {
-        return self.barSeries.bars[index].closePrice
-    }
 }
 
 public struct OpenPriceIndicator: ValueIndicator {
     
-    public var barSeries: BarSeries
-    
-    public init(barSeries: BarSeries){
-        self.barSeries = barSeries;
-    }
-    
-    public func getValue(for index: Int) -> Double {
-        return self.barSeries.bars[index].openPrice
-    }
+    public var f: (BarSeries, Int) -> Double = {$0.bars[$1].openPrice}
 }
 
 public struct HighPriceIndicator: ValueIndicator {
     
-    public var barSeries: BarSeries
-    
-    public init(barSeries: BarSeries){
-        self.barSeries = barSeries;
-    }
-    
-    public func getValue(for index: Int) -> Double {
-        return self.barSeries.bars[index].highPrice
-    }
+    public var f: (BarSeries, Int) -> Double = {$0.bars[$1].highPrice}
 }
 
 public struct LowPriceIndicator: ValueIndicator {
     
-    public var barSeries: BarSeries
-    
-    public init(barSeries: BarSeries){
-        self.barSeries = barSeries;
-    }
-    
-    public func getValue(for index: Int) -> Double {
-        return self.barSeries.bars[index].lowPrice
-    }
+    public var f: (BarSeries, Int) -> Double = {$0.bars[$1].lowPrice}
 }
 
 public struct VolumePriceIndicator: ValueIndicator {
     
-    public var barSeries: BarSeries
-    
-    public init(barSeries: BarSeries){
-        self.barSeries = barSeries;
-    }
-    
-    public func getValue(for index: Int) -> Double {
-        return Double(self.barSeries.bars[index].volume)
-    }
+    public var f: (BarSeries, Int) -> Double = {Double($0.bars[$1].volume)}
 }

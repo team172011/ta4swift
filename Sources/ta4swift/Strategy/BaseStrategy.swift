@@ -24,21 +24,21 @@ public struct BaseStrategy: Strategy {
         return unstablePeriod > index
     }
     
-    public func shouldEnter(index: Int, record: TradingRecord) -> Bool {
+    public func shouldEnter(_ barSeries: BarSeries, index: Int, record: TradingRecord) -> Bool {
         return !isUnstableAt(index: index) &&
-            entryRule.isSatisfied(for: index, record: record)
+            entryRule.isSatisfied(barSeries, for: index, record: record)
     }
     
-    public func shouldExit(index: Int, record: TradingRecord) -> Bool {
+    public func shouldExit(_ barSeries: BarSeries, index: Int, record: TradingRecord) -> Bool {
         return !isUnstableAt(index: index) &&
-            exitRule.isSatisfied(for: index, record: record)
+            exitRule.isSatisfied(barSeries, for: index, record: record)
     }
     
-    public func canEnter(record: TradingRecord) -> Bool {
+    public func canEnter(_ barSeries: BarSeries, record: TradingRecord) -> Bool {
         return !record.hasOpenPosition
     }
     
-    public func canExit(record: TradingRecord) -> Bool {
+    public func canExit(_ barSeries: BarSeries, record: TradingRecord) -> Bool {
         return record.hasOpenPosition
     }
     

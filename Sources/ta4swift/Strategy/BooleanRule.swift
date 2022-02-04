@@ -9,18 +9,18 @@ import Foundation
 
 public struct BooleanRule: Rule {
     
-    public let satisfied: Bool
+    public let satisfied: () -> Bool
     
-    public init(_ satisfied: Bool) {
+    public init(_ satisfied: @escaping () -> Bool) {
         self.satisfied = satisfied
     }
     
-    public func isSatisfied(for index: Int) -> Bool {
-        return satisfied
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int) -> Bool {
+        return satisfied()
     }
     
-    public func isSatisfied(for index: Int, record: TradingRecord) -> Bool {
-        return satisfied
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int, record: TradingRecord) -> Bool {
+        return satisfied()
     }
     
 }

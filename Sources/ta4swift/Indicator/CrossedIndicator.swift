@@ -10,40 +10,67 @@ import Foundation
 // returns true indicator1 crosses down indicator2/constant value
 public struct CrossedIndicator: BooleanIndicator {
     
-    public var barSeries: BarSeries
-    public var indicator1: ValueIndicator
-    public var indicator2: ValueIndicator
+    public var f: (BarSeries, Int) -> Bool
+    
     
     public init(indicator1: ValueIndicator, indicator2: ValueIndicator) {
-        assert(indicator1.barSeries === indicator2.barSeries)
-        self.barSeries = indicator1.barSeries
-        self.indicator1 = indicator1
-        self.indicator2 = indicator2
+        self.f = { barSeries, index in
+            if index == 0 || indicator1.f(barSeries, index) >= indicator2.f(barSeries, index) {
+                return false
+            }
+            
+            var i = index - 1
+            if indicator1.f(barSeries, i) > indicator2.f(barSeries, i) {
+                return true
+            }
+            
+            while i > 0 && indicator1.f(barSeries, i) == indicator2.f(barSeries, i) {
+                i = i - 1
+            }
+            
+            return ( i != 0) && indicator1.f(barSeries, i) > indicator2.f(barSeries, i)
+        }
     }
     
-    public init(indicator: ValueIndicator, constant: Double) {
-        self.init(indicator1: indicator, indicator2: ConstantValueIndicator(barSeries: indicator.barSeries, constant: constant))
+    public init(indicator1: ValueIndicator, constant: Double) {
+        let indicator2 = ConstantValueIndicator{ constant }
+        
+        self.f = { barSeries, index in
+            if index == 0 || indicator1.f(barSeries, index) >= indicator2.f(barSeries, index) {
+                return false
+            }
+            
+            var i = index - 1
+            if indicator1.f(barSeries, i) > indicator2.f(barSeries, i) {
+                return true
+            }
+            
+            while i > 0 && indicator1.f(barSeries, i) == indicator2.f(barSeries, i) {
+                i = i - 1
+            }
+            
+            return ( i != 0) && indicator1.f(barSeries, i) > indicator2.f(barSeries, i)
+        }
     }
     
-    public init(constant: Double, indicator: ValueIndicator) {
-        self.init(indicator1: ConstantValueIndicator(barSeries: indicator.barSeries, constant: constant), indicator2: indicator)
-    }
-    
-    public func getValue(for index: Int) -> Bool {
-        if index == 0 || indicator1.getValue(for: index) >= indicator2.getValue(for: index) {
-            return false
+    public init(constant: Double, indicator2: ValueIndicator) {
+        let indicator1 = ConstantValueIndicator{ constant }
+        
+        self.f = { barSeries, index in
+            if index == 0 || indicator1.f(barSeries, index) >= indicator2.f(barSeries, index) {
+                return false
+            }
+            
+            var i = index - 1
+            if indicator1.f(barSeries, i) > indicator2.f(barSeries, i) {
+                return true
+            }
+            
+            while i > 0 && indicator1.f(barSeries, i) == indicator2.f(barSeries, i) {
+                i = i - 1
+            }
+            
+            return ( i != 0) && indicator1.f(barSeries, i) > indicator2.f(barSeries, i)
         }
-        
-        var i = index - 1
-        if indicator1.getValue(for: i) > indicator2.getValue(for: i) {
-            return true
-        }
-        
-        while i > 0 && indicator1.getValue(for: i) == indicator2.getValue(for: i) {
-            i = i - 1
-        }
-        
-        return ( i != 0) && indicator1.getValue(for: i) > indicator2.getValue(for: i)
-        
     }
 }

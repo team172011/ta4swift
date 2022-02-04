@@ -54,21 +54,10 @@ public struct NumericIndicator: ValueIndicator, NumericOperations {
         return NumericIndicator { UnaryOperation.abs(indicator: self)}
     }
     
-    
-    public let delegate: ValueIndicator
-    
-    public var barSeries: BarSeries {
-        get {
-            return delegate.barSeries;
-        }
-    }
+    public var f: (BarSeries, Int) -> Double
     
     init(_ indicator: () -> ValueIndicator) {
-        self.delegate = indicator();
-    }
-    
-    public func getValue(for index: Int) -> Double {
-        return delegate.getValue(for: index)
+        self.f = indicator().f;
     }
     
 }
