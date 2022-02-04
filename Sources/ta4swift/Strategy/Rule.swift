@@ -16,18 +16,18 @@ public protocol Rule {
 extension Rule {
     
     func and(_ rule: Rule) -> Rule {
-        return AndRule(rule1: self, rule2: rule)
+        return AndRule{ [self, rule] }
     }
     
     func or(_ rule: Rule) -> Rule {
-        return OrRule(rule1: self, rule2: rule)
+        return OrRule{ [self, rule] }
     }
     
     func xor(_ rule: Rule) -> Rule {
-        return XOrRule(rule1: self, rule2: rule)
+        return XOrRule{ (self, rule) }
     }
     
     func negation() -> Rule {
-        return NotRule(rule: self)
+        return NotRule{ self }
     }
 }

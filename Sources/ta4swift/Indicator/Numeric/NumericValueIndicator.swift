@@ -23,35 +23,35 @@ public protocol NumericOperations {
 public struct NumericIndicator: ValueIndicator, NumericOperations {
     
     public func minus(indicator: ValueIndicator) -> NumericIndicator {
-        return NumericIndicator(of: BinaryOperation.difference(left: self, right: indicator))
+        return NumericIndicator{ BinaryOperation.difference(left: self, right: indicator) }
     }
     
     public func plus(indicator: ValueIndicator) -> NumericIndicator {
-        return NumericIndicator(of: BinaryOperation.sum(left: self, right: indicator))
+        return NumericIndicator{ BinaryOperation.sum(left: self, right: indicator) }
     }
     
     public func multiply(indicator: ValueIndicator) -> NumericIndicator {
-        return NumericIndicator(of: BinaryOperation.product(left: self, right: indicator))
+        return NumericIndicator { BinaryOperation.product(left: self, right: indicator) }
     }
     
     public func divide(indicator: ValueIndicator) -> NumericIndicator {
-        return NumericIndicator(of: BinaryOperation.quotient(left: self, right: indicator))
+        return NumericIndicator{ BinaryOperation.quotient(left: self, right: indicator) }
     }
     
     public func min(indicator: ValueIndicator) -> NumericIndicator {
-        return NumericIndicator(of: BinaryOperation.min(left: self, right: indicator))
+        return NumericIndicator{ BinaryOperation.min(left: self, right: indicator) }
     }
     
     public func max(indicator: ValueIndicator) -> NumericIndicator {
-        return NumericIndicator(of: BinaryOperation.max(left: self, right: indicator))
+        return NumericIndicator{ BinaryOperation.max(left: self, right: indicator) }
     }
     
     public func sqrt() -> NumericIndicator {
-        return NumericIndicator(of: UnaryOperation.sqrt(indicator: self))
+        return NumericIndicator{ UnaryOperation.sqrt(indicator: self) }
     }
     
     public func abs() -> NumericIndicator {
-        return NumericIndicator(of: UnaryOperation.abs(indicator: self))
+        return NumericIndicator { UnaryOperation.abs(indicator: self)}
     }
     
     
@@ -63,8 +63,8 @@ public struct NumericIndicator: ValueIndicator, NumericOperations {
         }
     }
     
-    init(of indicator: ValueIndicator) {
-        self.delegate = indicator;
+    init(_ indicator: () -> ValueIndicator) {
+        self.delegate = indicator();
     }
     
     public func getValue(for index: Int) -> Double {

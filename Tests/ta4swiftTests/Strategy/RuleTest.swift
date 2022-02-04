@@ -18,39 +18,39 @@ final class RuleTes: Ta4swiftTest {
     
     func testLogicRule() throws {
 
-        let andRule = AndRule(rule1: falseRule, rule2: trueRule);
+        let andRule = AndRule{[falseRule, trueRule]};
         
         XCTAssertFalse(andRule.isSatisfied(for: 0))
         XCTAssertFalse(andRule.isSatisfied(for: 5))
         XCTAssertFalse(andRule.isSatisfied(for: 100))
         
-        let andRule2 = AndRule(rule1: trueRule, rule2: trueRule2)
+        let andRule2 = AndRule{[trueRule, trueRule2]}
         
         XCTAssertTrue(andRule2.isSatisfied(for: 0))
         XCTAssertTrue(andRule2.isSatisfied(for: 5))
         XCTAssertTrue(andRule2.isSatisfied(for: 100))
         
-        let orRule = XOrRule(rule1: trueRule, rule2: falseRule)
+        let orRule = XOrRule{(trueRule, falseRule)}
         
         XCTAssertTrue(orRule.isSatisfied(for: 0))
         XCTAssertTrue(orRule.isSatisfied(for: 5))
         
-        let orRule2 = OrRule(rule1: trueRule, rule2: trueRule2)
+        let orRule2 = OrRule{[trueRule, trueRule2]}
         
         XCTAssertTrue(orRule2.isSatisfied(for: 0))
         XCTAssertTrue(orRule2.isSatisfied(for: 5))
         
-        let orRule3 = OrRule(rule1: falseRule, rule2: falseRule2)
+        let orRule3 = OrRule{[falseRule, falseRule2]}
         
         XCTAssertFalse(orRule3.isSatisfied(for: 0))
         XCTAssertFalse(orRule3.isSatisfied(for: 5))
         
-        let xOrRule = OrRule(rule1: trueRule, rule2: falseRule)
+        let xOrRule = OrRule{[trueRule, falseRule]}
         
         XCTAssertTrue(xOrRule.isSatisfied(for: 0))
         XCTAssertTrue(xOrRule.isSatisfied(for: 5))
         
-        let xOrRule2 = XOrRule(rule1: trueRule, rule2: trueRule2)
+        let xOrRule2 = XOrRule{(trueRule, trueRule2)}
         
         XCTAssertFalse(xOrRule2.isSatisfied(for: 0))
         XCTAssertFalse(xOrRule2.isSatisfied(for: 5))
