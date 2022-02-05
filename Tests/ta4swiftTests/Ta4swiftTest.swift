@@ -25,7 +25,7 @@ public class Ta4swiftTest: XCTestCase {
         for row in data {
             let entries = row.components(separatedBy: ",")
             if(entries.count >= 5) {
-                bars.append(Bar(openPrice: Double(entries[1])!, highPrice: Double(entries[2])!, lowPrice: Double(entries[3])!, closePrice: Double(entries[4])!, volume: Int(entries[5])!, date: dateFormatter.date(from: entries[0])!))
+                bars.append(Bar(openPrice: Double(entries[1])!, highPrice: Double(entries[2])!, lowPrice: Double(entries[3])!, closePrice: Double(entries[4])!, volume: Int(entries[5])!, beginTime: dateFormatter.date(from: entries[0])!))
             }
 
         }
@@ -39,7 +39,7 @@ public class Ta4swiftTest: XCTestCase {
         for row in data {
             let entries = row.components(separatedBy: ",")
             if(entries.count >= 5) {
-                bars.append(Bar(openPrice: Double(entries[1])!, highPrice: Double(entries[2])!, lowPrice: Double(entries[3])!, closePrice: Double(entries[4])!, volume: Int(entries[6])!, date: dateFormatter.date(from: entries[0])!))
+                bars.append(Bar(openPrice: Double(entries[1])!, highPrice: Double(entries[2])!, lowPrice: Double(entries[3])!, closePrice: Double(entries[4])!, volume: Int(entries[6])!, beginTime:  dateFormatter.date(from: entries[0])!))
             }
 
         }
