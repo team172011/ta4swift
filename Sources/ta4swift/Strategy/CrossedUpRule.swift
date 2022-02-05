@@ -15,11 +15,11 @@ public struct CrossedUpRule: Rule {
     
     public let indicator: CrossedIndicator
     
-    public init(indicator1: ValueIndicator, indicator2: ValueIndicator) {
+    public init<T: ValueIndicator>(indicator1: T, indicator2: T) {
         self.indicator = CrossedIndicator(indicator1: indicator2, indicator2: indicator1)
     }
     
-    public init(indicator1: ValueIndicator, treshold: Double) {
+    public init<T: ValueIndicator>(indicator1: T, treshold: Double) {
         self.indicator = CrossedIndicator(constant: treshold, indicator2: indicator1)
     }
     

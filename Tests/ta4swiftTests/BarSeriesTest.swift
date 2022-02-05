@@ -73,4 +73,11 @@ final class BarSeriesTest: Ta4swiftTest {
         printValues(appleBars, sma)
     }
     
+    func testBarSeriesValueExtension() throws{
+        let appleBars = readAppleIncSeries("TestAppleInc")
+        let indicator = ConstantValueIndicator{ 10 }
+        XCTAssertTrue(10 == appleBars.value(indicator, 10))
+
+    }
+    
 }

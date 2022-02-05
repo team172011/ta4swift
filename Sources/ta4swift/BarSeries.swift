@@ -98,4 +98,8 @@ extension BarSeries {
     public func ema(barCount: Int) -> EMAIndicator {
         return EMAIndicator(indicator: self.close, barCount: barCount)
     }
+    
+    public func value<T: ValueIndicator>(_ indicator: T, _ index: Int) -> Double {
+        return indicator.f(self, index)
+    }
 }

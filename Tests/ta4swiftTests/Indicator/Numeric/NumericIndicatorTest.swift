@@ -18,7 +18,7 @@ final class NumericIndicatorTest: Ta4swiftTest {
         let close = barSeries.close
         let close2 = barSeries.high
         
-        let numericIndicator = NumericIndicator{close}.plus(indicator: close2)
+        let numericIndicator = NumericIndicator{close}.plus(close2)
         
         for index in 0..<bars.count {
             XCTAssertEqual(numericIndicator.f(barSeries, index), close.f(barSeries, index) + close2.f(barSeries, index))
@@ -32,7 +32,7 @@ final class NumericIndicatorTest: Ta4swiftTest {
         let close = barSeries.close
         let close2 = barSeries.close
         
-        let numericIndicator = NumericIndicator{close}.minus(indicator: close2)
+        let numericIndicator = NumericIndicator{close}.minus(close2)
         
         for index in 0..<bars.count {
             XCTAssertEqual(numericIndicator.f(barSeries, index), close.f(barSeries, index) - close2.f(barSeries, index))
@@ -45,7 +45,7 @@ final class NumericIndicatorTest: Ta4swiftTest {
         let close = barSeries.close
         let close2 = barSeries.close
         
-        let numericIndicator = NumericIndicator{close}.divide(indicator: close2)
+        let numericIndicator = NumericIndicator{close}.divide(close2)
         
         for index in 0..<bars.count {
             XCTAssertEqual(numericIndicator.f(barSeries, index), close.f(barSeries, index) / close2.f(barSeries, index))
@@ -58,7 +58,7 @@ final class NumericIndicatorTest: Ta4swiftTest {
         let close = barSeries.close
         let close2 = barSeries.close
         
-        let numericIndicator = NumericIndicator{close}.multiply(indicator: close2)
+        let numericIndicator = NumericIndicator{close}.multiply(close2)
         
         for index in 0..<bars.count {
             XCTAssertEqual(numericIndicator.f(barSeries, index), close.f(barSeries, index) * close2.f(barSeries, index))
@@ -70,7 +70,7 @@ final class NumericIndicatorTest: Ta4swiftTest {
         let barSeries = BarSeries(name: "Test", bars: bars)
         let close = barSeries.close
         let constant = ConstantValueIndicator{ 10 }
-        let numericIndicator = NumericIndicator{close}.minus(indicator: constant).abs()
+        let numericIndicator = NumericIndicator{close}.minus(constant).abs()
         
         for index in 0..<bars.count {
             XCTAssertEqual(numericIndicator.f(barSeries, index), Swift.abs(close.f(barSeries, index) - 10))

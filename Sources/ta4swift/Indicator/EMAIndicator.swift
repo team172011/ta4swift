@@ -11,13 +11,12 @@ public struct EMAIndicator: ValueIndicator {
     
     public var f: (BarSeries, Int) -> Double
     
-    init(indicator: ValueIndicator,  barCount: Int){
+    init<T: ValueIndicator>(indicator: T,  barCount: Int){
         
-
         self.f = { barSeries, index in
             let multiplier = (2.0 / Double((barCount + 1)))
             
-            func f_helper(_ barSeries: BarSeries, _ index: Int, _ indicator: ValueIndicator, _ multiplier: Double) -> Double {
+            func f_helper<T: ValueIndicator>(_ barSeries: BarSeries, _ index: Int, _ indicator: T, _ multiplier: Double) -> Double {
                 if (index == 0) {
                     return indicator.f(barSeries, 0);
                 }

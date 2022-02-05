@@ -26,4 +26,14 @@ public struct Runner {
         
         return record
     }
+    
+    static func run(barSeries: [BarSeries], strategy: Strategy, type: TradeType) -> Dictionary<String, TradingRecord> {
+        var records = Dictionary<String, TradingRecord>()
+        for series in barSeries {
+            let result = run(barSeries: series, strategy: strategy, type: type)
+            records[series.name] = result
+        }
+        
+        return records
+    }
 }
