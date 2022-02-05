@@ -9,18 +9,19 @@ import Foundation
 
 public struct NotRule: Rule {
     
+    
     public let rule: Rule
     
     public init(_ rule: () -> Rule) {
         self.rule = rule()
     }
     
-    public func isSatisfied(for index: Int) -> Bool{
-        return !rule.isSatisfied(for: index)
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int) -> Bool{
+        return !rule.isSatisfied(barSeries, for: index)
     }
     
-    public func isSatisfied(for index: Int, record: TradingRecord) -> Bool{
-        return !rule.isSatisfied(for: index, record: record)
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int, record: TradingRecord) -> Bool{
+        return !rule.isSatisfied(barSeries, for: index, record: record)
     }
     
 }

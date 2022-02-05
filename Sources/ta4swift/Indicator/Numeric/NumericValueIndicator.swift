@@ -9,12 +9,12 @@ import Foundation
 
 public protocol NumericOperations {
     
-    func minus(indicator: ValueIndicator) -> NumericIndicator
-    func plus(indicator: ValueIndicator) -> NumericIndicator
-    func multiply(indicator: ValueIndicator) -> NumericIndicator
-    func divide(indicator: ValueIndicator) -> NumericIndicator
-    func min(indicator: ValueIndicator) -> NumericIndicator
-    func max(indicator: ValueIndicator) -> NumericIndicator
+    func minus<T: ValueIndicator>(_ indicator: T) -> NumericIndicator
+    func plus<T: ValueIndicator>(_ indicator: T) -> NumericIndicator
+    func multiply<T: ValueIndicator>(_ indicator: T) -> NumericIndicator
+    func divide<T: ValueIndicator>(_ indicator: T) -> NumericIndicator
+    func min<T: ValueIndicator>(_ indicator: T) -> NumericIndicator
+    func max<T: ValueIndicator>(_ indicator: T) -> NumericIndicator
     
     func sqrt() -> NumericIndicator
     func abs() -> NumericIndicator
@@ -22,27 +22,27 @@ public protocol NumericOperations {
 
 public struct NumericIndicator: ValueIndicator, NumericOperations {
     
-    public func minus(indicator: ValueIndicator) -> NumericIndicator {
-        return NumericIndicator{ BinaryOperation.difference(left: self, right: indicator) }
+    public func minus<T: ValueIndicator>(_ indicator: T) -> NumericIndicator {
+        return NumericIndicator { BinaryOperation.difference(left: self, right: indicator) }
     }
     
-    public func plus(indicator: ValueIndicator) -> NumericIndicator {
+    public func plus<T: ValueIndicator>(_ indicator: T) -> NumericIndicator {
         return NumericIndicator{ BinaryOperation.sum(left: self, right: indicator) }
     }
     
-    public func multiply(indicator: ValueIndicator) -> NumericIndicator {
+    public func multiply<T: ValueIndicator>(_ indicator: T) -> NumericIndicator {
         return NumericIndicator { BinaryOperation.product(left: self, right: indicator) }
     }
     
-    public func divide(indicator: ValueIndicator) -> NumericIndicator {
+    public func divide<T: ValueIndicator>(_ indicator: T) -> NumericIndicator {
         return NumericIndicator{ BinaryOperation.quotient(left: self, right: indicator) }
     }
     
-    public func min(indicator: ValueIndicator) -> NumericIndicator {
+    public func min<T: ValueIndicator>(_ indicator: T) -> NumericIndicator {
         return NumericIndicator{ BinaryOperation.min(left: self, right: indicator) }
     }
     
-    public func max(indicator: ValueIndicator) -> NumericIndicator {
+    public func max<T: ValueIndicator>(_ indicator: T) -> NumericIndicator {
         return NumericIndicator{ BinaryOperation.max(left: self, right: indicator) }
     }
     
@@ -54,21 +54,10 @@ public struct NumericIndicator: ValueIndicator, NumericOperations {
         return NumericIndicator { UnaryOperation.abs(indicator: self)}
     }
     
+    public var f: (BarSeries, Int) -> Double
     
-    public let delegate: ValueIndicator
-    
-    public var barSeries: BarSeries {
-        get {
-            return delegate.barSeries;
-        }
-    }
-    
-    init(_ indicator: () -> ValueIndicator) {
-        self.delegate = indicator();
-    }
-    
-    public func getValue(for index: Int) -> Double {
-        return delegate.getValue(for: index)
+    init<T: ValueIndicator>(_ indicator: () -> T) {
+        self.f = indicator().f;
     }
     
 }

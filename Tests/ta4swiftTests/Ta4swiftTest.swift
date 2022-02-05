@@ -10,19 +10,40 @@ import Foundation
 import XCTest
 
 public class Ta4swiftTest: XCTestCase {
+
+    let yahooDateFormatter: () -> DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        return dateFormatter
+    }
+    
     
     func readAppleIncSeries(_ name: String) -> BarSeries {
+        let dateFormatter = yahooDateFormatter()
         let data = readFileAsStringArray(fileName: "appleinc_bars")
         var bars = [Bar]()
         for row in data {
             let entries = row.components(separatedBy: ",")
             if(entries.count >= 5) {
-                bars.append(createBar(Double(entries[1])!, Double(entries[2])!, Double(entries[3])!, Double(entries[4])!, Int(entries[5])!, Date()))
+                bars.append(Bar(openPrice: Double(entries[1])!, highPrice: Double(entries[2])!, lowPrice: Double(entries[3])!, closePrice: Double(entries[4])!, volume: Int(entries[5])!, beginTime: dateFormatter.date(from: entries[0])!))
             }
 
         }
         return BarSeries(name: name, bars: bars)
+    }
+    
+    func readBitcoinSeries(_ name: String) -> BarSeries {
+        let dateFormatter = yahooDateFormatter()
+        let data = readFileAsStringArray(fileName: "BTC-USD")
+        var bars = [Bar]()
+        for row in data {
+            let entries = row.components(separatedBy: ",")
+            if(entries.count >= 5) {
+                bars.append(Bar(openPrice: Double(entries[1])!, highPrice: Double(entries[2])!, lowPrice: Double(entries[3])!, closePrice: Double(entries[4])!, volume: Int(entries[6])!, beginTime:  dateFormatter.date(from: entries[0])!))
+            }
 
+        }
+        return BarSeries(name: name, bars: bars)
     }
     
     func readFileAsStringArray(fileName: String) -> [String]  {
@@ -78,10 +99,10 @@ extension Ta4swiftTest {
     /**
         Prints all values of this BooleanIndicator on the console if executed in xCode
      */
-    func printValues(_ indicator: BooleanIndicator) {
+    func printValues<T: BooleanIndicator>(_ barSeries: BarSeries, _ indicator: T) {
         #if Xcode
-        for (i, _) in indicator.barSeries.bars.enumerated() {
-            print("index: \(i) value: \(indicator.getValue(for: i))")
+        for (i, _) in barSeries.bars.enumerated() {
+            print("index: \(i) value: \(indicator.f(barSeries, i))")
         }
         #endif
     }
@@ -89,10 +110,10 @@ extension Ta4swiftTest {
     /**
         Prints all values  of this ValueIndicator on the console if executed in xCode
      */
-    func printValues(_ indicator: ValueIndicator) {
+    func printValues<T: ValueIndicator>(_ barSeries: BarSeries, _ indicator: T) {
         #if Xcode
-        for (i, _) in indicator.barSeries.bars.enumerated() {
-            print("index: \(i) value: \(indicator.getValue(for: i))")
+        for (i, _) in barSeries.bars.enumerated() {
+            print("index: \(i) value: \(indicator.f(barSeries, i))")
         }
         #endif
     }
@@ -103,7 +124,7 @@ extension Ta4swiftTest {
     func printValues(_ rule: Rule, _ barSeries: BarSeries) {
         #if Xcode
         for (i, _) in barSeries.bars.enumerated() {
-            print("index: \(i) value: \(rule.isSatisfied(for: i))")
+            print("index: \(i) value: \(rule.isSatisfied(barSeries, for: i))")
         }
         #endif
     }

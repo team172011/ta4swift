@@ -15,11 +15,11 @@ public struct AndRule: Rule {
         self.rules = rules()
     }
     
-    public func isSatisfied(for index: Int) -> Bool {
-        return rules.allSatisfy{ rule in rule.isSatisfied(for: index)}
+    public func isSatisfied(_ barSeries: BarSeries, for index: Int) -> Bool {
+        return rules.allSatisfy{ rule in rule.isSatisfied(barSeries, for: index)}
     }
     
-    public func isSatisfied(for index: Int, record: TradingRecord) -> Bool {
-        return rules.allSatisfy{ rule in rule.isSatisfied(for: index, record: record)}
+    public func isSatisfied(_ barSeries: BarSeries,for index: Int, record: TradingRecord) -> Bool {
+        return rules.allSatisfy{ rule in rule.isSatisfied(barSeries, for: index, record: record)}
     }
 }

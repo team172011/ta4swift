@@ -31,16 +31,17 @@ public class BaseStrategyTest: Ta4swiftTest {
     }
     
     func testIsSatisfied() {
-        let entryRule = BooleanRule(true)
-        let exitRule = BooleanRule(false)
+        let barSeries = BarSeries(name: "Test", bars: createBars(1,2,3,4,5,6,7,8,9,1,5,10,9,8,7,6,8,9,10))
+        let entryRule = BooleanRule{ true }
+        let exitRule = BooleanRule{ false }
         
         let strategy = BaseStrategy(entryRule: entryRule, exitRule: exitRule)
         let tradingRecord = BaseTradingRecord()
         
-        XCTAssertTrue(strategy.shouldEnter(index: 0, record: tradingRecord))
-        XCTAssertTrue(strategy.shouldEnter(index: 1, record: tradingRecord))
+        XCTAssertTrue(strategy.shouldEnter(barSeries, index: 0, record: tradingRecord))
+        XCTAssertTrue(strategy.shouldEnter(barSeries, index: 1, record: tradingRecord))
         
-        XCTAssertFalse(strategy.shouldExit(index: 1, record: tradingRecord))
-        XCTAssertFalse(strategy.shouldExit(index: 1, record: tradingRecord))
+        XCTAssertFalse(strategy.shouldExit(barSeries, index: 1, record: tradingRecord))
+        XCTAssertFalse(strategy.shouldExit(barSeries, index: 1, record: tradingRecord))
     }
 }

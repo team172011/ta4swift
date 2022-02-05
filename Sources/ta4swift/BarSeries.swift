@@ -62,34 +62,34 @@ extension BarSeries {
     
     public var close: NumericIndicator {
         get {
-            return NumericIndicator{ ClosePriceIndicator(barSeries: self) }
+            return NumericIndicator{ ClosePriceIndicator() }
         }
     }
                                                          
     
     public var high: NumericIndicator {
         get {
-            return NumericIndicator{ HighPriceIndicator(barSeries: self) }
+            return NumericIndicator{ HighPriceIndicator() }
         }
     }
                                                          
     public var low: NumericIndicator {
         get {
-            return NumericIndicator{ LowPriceIndicator(barSeries: self)}
+            return NumericIndicator{ LowPriceIndicator()}
         }
     }
     
     
     public var open: NumericIndicator {
         get {
-            return NumericIndicator{ OpenPriceIndicator(barSeries: self) }
+            return NumericIndicator{ OpenPriceIndicator() }
         }
     }
     
     
     public var volume: NumericIndicator {
         get {
-            return NumericIndicator{ VolumePriceIndicator(barSeries: self) }
+            return NumericIndicator{ VolumePriceIndicator() }
         }
     }
     
@@ -107,5 +107,9 @@ extension BarSeries {
     
     public func ema(barCount: Int) -> EMAIndicator {
         return EMAIndicator(indicator: self.close, barCount: barCount)
+    }
+    
+    public func value<T: ValueIndicator>(_ indicator: T, _ index: Int) -> Double {
+        return indicator.f(self, index)
     }
 }

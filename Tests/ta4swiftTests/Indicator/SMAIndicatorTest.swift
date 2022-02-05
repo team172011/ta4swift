@@ -15,12 +15,12 @@ final class SMAIndicatorTest: Ta4swiftTest {
     func testCreation() throws {
         let bars = createBars(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
         let barSeries = BarSeries(name: "Test", bars: bars)
-        let close = ClosePriceIndicator(barSeries: barSeries)
+        let close = ClosePriceIndicator()
         let sma = SMAIndicator(indicator: close, barCount: 3)
-        printValues(sma)
-        XCTAssertTrue(sma.getValue(for: 0) == 0, "SMA of index 0 should return 0")
-        XCTAssertTrue(sma.getValue(for: 1) == 0, "SMA of index 1 should return 0")
-        XCTAssertTrue(sma.getValue(for: 3) == 3)
-        XCTAssertTrue(sma.getValue(for: 17) == 17);
+        printValues(barSeries, sma)
+        XCTAssertTrue(sma.f(barSeries, 0) == 0, "SMA of index 0 should return 0")
+        XCTAssertTrue(sma.f(barSeries, 1) == 0, "SMA of index 1 should return 0")
+        XCTAssertTrue(sma.f(barSeries, 3) == 3)
+        XCTAssertTrue(sma.f(barSeries, 17) == 17);
     }
 }
