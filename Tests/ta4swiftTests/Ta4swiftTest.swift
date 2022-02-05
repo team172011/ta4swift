@@ -69,16 +69,24 @@ public class Ta4swiftTest: XCTestCase {
         return bars
     }
     
-    func createBar(_ open: Double, _ high: Double, _ low: Double, _ close: Double, _ volume: Int, _ date: Date) -> Bar {
-        return Bar(openPrice: open, highPrice: high, lowPrice: low, closePrice: close, volume: volume, date: date)
-    }
-    
     func createBar(_ close: Double, _ date: Date) -> Bar {
         let high = Double.random(in: close...close*2)
         let low = Double.random(in: close*0.5...close)
         let open = Double.random(in: low...high)
         let volume = Int.random(in: 1...100000)
-        return Bar(openPrice: open, highPrice: high, lowPrice: low, closePrice: close, volume: volume, date: date)
+        return createBar(open, high, low, close, volume, date)
+    }
+    
+    func createBar(_ open: Double, _ high: Double, _ low: Double, _ close: Double, _ volume: Int, _ date: Date) -> Bar {
+        let beginTime = date
+        let endTime = date.addingTimeInterval(TimeInterval(Int.random(in: 60...28800)))
+        return createBar(open, high, low, close, volume, beginTime, endTime)
+    }
+    
+    func createBar(_ open: Double, _ high: Double, _ low: Double, _ close: Double, _ volume: Int, _ beginTime: Date, _ endTime: Date) -> Bar {
+        let trades = Int.random(in: 1...5000)
+        let amount = Double.random(in: 10_000...100_000)
+        return Bar(openPrice: open, highPrice: high, lowPrice: low, closePrice: close, volume: volume, beginTime: beginTime, trades: trades, amount: amount, endTime: endTime)
     }
     
 }

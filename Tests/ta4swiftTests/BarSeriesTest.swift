@@ -11,12 +11,15 @@ import XCTest
 final class BarSeriesTest: Ta4swiftTest {
     
     func testCreateBar() throws {
-        let now = Date();
-        let bar = createBar(10,12,9,11,1000,now)
+        let endTime = Date()
+        let beginTime = endTime - 60
+        let bar = createBar(10,12,9,11,1000,beginTime, endTime)
         XCTAssertTrue(bar.openPrice == 10)
         XCTAssertTrue(bar.closePrice == 11)
         XCTAssertTrue(bar.volume == 1000)
-        XCTAssertTrue(bar.date == now)
+        XCTAssertTrue(bar.endTime == endTime)
+        XCTAssertTrue(bar.beginTime == beginTime)
+        XCTAssertTrue(bar.timePeriod == TimeInterval(60))
     }
     
     func testCreateBarSeries() throws {
@@ -26,9 +29,9 @@ final class BarSeriesTest: Ta4swiftTest {
         barSeries.addBar(8, 10, 5, 4, 1000, now + 120)
         barSeries.addBar(4, 5, 4, 4, 100, now + 180)
         XCTAssertTrue(barSeries.name == "BarSeriesTest")
-        XCTAssertTrue(barSeries.bars[0].date == now)
-        XCTAssertTrue(barSeries.bars[1].date == now + 60)
-        XCTAssertTrue(barSeries.bars[2].date == now + 120)
+        XCTAssertTrue(barSeries.bars[0].beginTime == now)
+        XCTAssertTrue(barSeries.bars[1].beginTime == now + 60)
+        XCTAssertTrue(barSeries.bars[2].beginTime == now + 120)
         XCTAssertTrue(barSeries.bars[3].closePrice == 4)
     }
     
