@@ -24,7 +24,7 @@ public struct CrossedUpRule: Rule {
     }
     
     public func isSatisfied(_ barSeries: BarSeries, for index: Int) -> Bool {
-        return indicator.f(barSeries, index)
+        return indicator.calc(barSeries, index)
     }
     
     public func isSatisfied(_ barSeries: BarSeries, for index: Int, record: TradingRecord) -> Bool {

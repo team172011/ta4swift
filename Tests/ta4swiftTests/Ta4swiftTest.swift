@@ -102,7 +102,7 @@ extension Ta4swiftTest {
     func printValues<T: BooleanIndicator>(_ barSeries: BarSeries, _ indicator: T) {
         #if Xcode
         for (i, _) in barSeries.bars.enumerated() {
-            print("index: \(i) value: \(indicator.f(barSeries, i))")
+            print("index: \(i) value: \(indicator.calc(barSeries, i))")
         }
         #endif
     }
@@ -113,7 +113,7 @@ extension Ta4swiftTest {
     func printValues<T: ValueIndicator>(_ barSeries: BarSeries, _ indicator: T) {
         #if Xcode
         for (i, _) in barSeries.bars.enumerated() {
-            print("index: \(i) value: \(indicator.f(barSeries, i))")
+            print("index: \(i) value: \(indicator.calc(barSeries, i))")
         }
         #endif
     }

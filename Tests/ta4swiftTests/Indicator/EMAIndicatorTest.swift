@@ -18,7 +18,7 @@ final class EMAIndicatorTest: Ta4swiftTest {
         let close = barSeries.close
         let ema = EMAIndicator(indicator: close, barCount: 3)
         
-        XCTAssertTrue(ema.f(barSeries, 0) == 1, "EMA of index 0 should return first value of indicator base")
-        XCTAssertTrue(ema.f(barSeries, 17) == 17.00000762939453);
+        XCTAssertTrue(ema.calc(barSeries, 0) == 1, "EMA of index 0 should return first value of indicator base")
+        XCTAssertTrue(ema.calc(barSeries, 17) == 17.00000762939453);
     }
 }

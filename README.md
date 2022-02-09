@@ -38,6 +38,29 @@ Position 5: Position[Entry: buy at: 189 Exit: sell at: 219]
 Position 6: Position[Entry: buy at: 227 Exit: sell at: 247]
 ```
 
+### How to create custom indicators
+
+```swift
+let myCustomIndicator = RawIndicator(){
+    { // write your custom function into the trailing closure
+    (series, index) in 
+    return series.bars[index].closePrice / series.bars[index].highPrice
+    }
+}
+```
+
+### How to combine indicators
+
+```swift
+let bars = createBars(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18)
+let barSeries = BarSeries(name: "Test", bars: bars)
+let close = barSeries.close
+let constant = ConstantValueIndicator{ 10 }
+let closePriceMinusTen = close.minus(constant)
+let closePriceMinusTenAbs = closePriceMinusTen.abs()
+
+```
+
 ### Re-use indicators and strategies to run it on different bar series
 ``` swift
     
