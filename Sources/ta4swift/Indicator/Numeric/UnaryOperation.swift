@@ -8,8 +8,9 @@
 import Foundation
 
 public struct UnaryOperation: ValueIndicator {
-    
-    public var f: (BarSeries, Int) -> Double
+    public var cached: Bool = false
+
+    public var calc: (BarSeries, Int) -> Double
 
     public static func abs<T: ValueIndicator>(indicator: T) -> UnaryOperation {
         UnaryOperation(for: indicator){ Swift.abs($0) }
@@ -20,7 +21,7 @@ public struct UnaryOperation: ValueIndicator {
     }
     
     public init<T: ValueIndicator>(for indicator: T, _ operation: @escaping ( Double) -> Double) {
-        self.f = { operation(indicator.f($0, $1)) }
+        self.calc = { operation(indicator.calc($0, $1)) }
     }
     
 }

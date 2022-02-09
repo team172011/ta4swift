@@ -45,25 +45,25 @@ final class BarSeriesTest: Ta4swiftTest {
         let open = barSeries.open
         let volume = barSeries.volume
         
-        XCTAssertTrue(close.f(barSeries, 11) == bars[11].closePrice)
-        XCTAssertTrue(close.f(barSeries, 0) == bars[0].closePrice)
-        XCTAssertTrue(close.f(barSeries, 1) == bars[1].closePrice)
+        XCTAssertEqual(close.calc(barSeries, 11), bars[11].closePrice)
+        XCTAssertEqual(close.calc(barSeries, 0), bars[0].closePrice)
+        XCTAssertEqual(close.calc(barSeries, 1), bars[1].closePrice)
         
-        XCTAssertTrue(high.f(barSeries, 11) == bars[11].highPrice)
-        XCTAssertTrue(high.f(barSeries, 0) == bars[0].highPrice)
-        XCTAssertTrue(high.f(barSeries, 1) == bars[1].highPrice)
+        XCTAssertEqual(high.calc(barSeries, 11), bars[11].highPrice)
+        XCTAssertEqual(high.calc(barSeries, 0), bars[0].highPrice)
+        XCTAssertEqual(high.calc(barSeries, 1), bars[1].highPrice)
         
-        XCTAssertTrue(low.f(barSeries, 11) == bars[11].lowPrice)
-        XCTAssertTrue(low.f(barSeries, 0) == bars[0].lowPrice)
-        XCTAssertTrue(low.f(barSeries, 1) == bars[1].lowPrice)
+        XCTAssertTrue(low.calc(barSeries, 11) == bars[11].lowPrice)
+        XCTAssertTrue(low.calc(barSeries, 0) == bars[0].lowPrice)
+        XCTAssertTrue(low.calc(barSeries, 1) == bars[1].lowPrice)
         
-        XCTAssertTrue(open.f(barSeries, 11) == bars[11].openPrice)
-        XCTAssertTrue(open.f(barSeries, 0) == bars[0].openPrice)
-        XCTAssertTrue(open.f(barSeries, 1) == bars[1].openPrice)
+        XCTAssertTrue(open.calc(barSeries, 11) == bars[11].openPrice)
+        XCTAssertTrue(open.calc(barSeries, 0) == bars[0].openPrice)
+        XCTAssertTrue(open.calc(barSeries, 1) == bars[1].openPrice)
         
-        XCTAssertTrue(volume.f(barSeries, 11) == Double(bars[11].volume))
-        XCTAssertTrue(volume.f(barSeries, 0) == Double(bars[0].volume))
-        XCTAssertTrue(volume.f(barSeries, 1) == Double(bars[1].volume))
+        XCTAssertTrue(volume.calc(barSeries, 11) == Double(bars[11].volume))
+        XCTAssertTrue(volume.calc(barSeries, 0) == Double(bars[0].volume))
+        XCTAssertTrue(volume.calc(barSeries, 1) == Double(bars[1].volume))
     }
     
     func testCreateBarSeriesFromFile() throws{

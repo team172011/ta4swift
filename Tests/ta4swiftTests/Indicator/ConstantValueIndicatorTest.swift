@@ -8,8 +8,8 @@ final class ConstantValueIndicatorTest: Ta4swiftTest {
         let barSeries = BarSeries(name: "Test", bars: bars)
         let sma = ConstantValueIndicator{ 3.0 }
         
-        XCTAssertTrue(sma.f(barSeries, 17) == 3.0)
-        XCTAssertTrue(sma.f(barSeries, 0) == 3.0)
-        XCTAssertTrue(sma.f(barSeries, 1000) == 3.0)
+        XCTAssertTrue(sma.calc(barSeries, 17) == 3.0)
+        XCTAssertTrue(sma.calc(barSeries, 0) == 3.0)
+        XCTAssertTrue(sma.calc(barSeries, 1000) == 3.0)
     }
 }

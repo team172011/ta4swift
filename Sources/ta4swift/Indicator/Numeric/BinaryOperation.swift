@@ -8,8 +8,8 @@
 import Foundation
 
 public struct BinaryOperation: ValueIndicator {
-    
-    public var f: (BarSeries, Int) -> Double
+    public var cached: Bool = false
+    public var calc: (BarSeries, Int) -> Double
     
     static func sum<T:ValueIndicator,U:ValueIndicator>(left: T, right: U) -> BinaryOperation {
         return BinaryOperation(left: left, right: right) { $0 + $1 }
@@ -36,7 +36,7 @@ public struct BinaryOperation: ValueIndicator {
     }
     
     public init<T: ValueIndicator,U:ValueIndicator>(left: T, right: U, _ operation: @escaping (Double, Double) -> Double) {
-        self.f = { operation(left.f($0, $1), right.f($0, $1)) }
+        self.calc = { operation(left.calc($0, $1), right.calc($0, $1)) }
     }
     
     

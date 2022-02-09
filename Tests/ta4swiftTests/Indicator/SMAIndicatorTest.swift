@@ -18,9 +18,9 @@ final class SMAIndicatorTest: Ta4swiftTest {
         let close = ClosePriceIndicator()
         let sma = SMAIndicator(indicator: close, barCount: 3)
         printValues(barSeries, sma)
-        XCTAssertTrue(sma.f(barSeries, 0) == 0, "SMA of index 0 should return 0")
-        XCTAssertTrue(sma.f(barSeries, 1) == 0, "SMA of index 1 should return 0")
-        XCTAssertTrue(sma.f(barSeries, 3) == 3)
-        XCTAssertTrue(sma.f(barSeries, 17) == 17);
+        XCTAssertTrue(sma.calc(barSeries, 0) == 0, "SMA of index 0 should return 0")
+        XCTAssertTrue(sma.calc(barSeries, 1) == 0, "SMA of index 1 should return 0")
+        XCTAssertTrue(sma.calc(barSeries, 3) == 3)
+        XCTAssertTrue(sma.calc(barSeries, 17) == 17);
     }
 }

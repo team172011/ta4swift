@@ -8,10 +8,12 @@
 import Foundation
 
 public struct ConstantValueIndicator: ValueIndicator {
-    public var f: (BarSeries, Int) -> Double
+    
+    public var cached: Bool = false
+    public var calc: (BarSeries, Int) -> Double
     
     public init(_ value: () -> Double) {
         let v = value()
-        self.f = { barSeries, index in return v }
+        self.calc = { barSeries, index in return v }
     }
 }
