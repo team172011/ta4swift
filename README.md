@@ -47,6 +47,9 @@ let myCustomIndicator = RawIndicator(){
     return series.bars[index].closePrice / series.bars[index].highPrice
     }
 }
+
+// create an instance of your indicator with a cache
+let myCachedIndicator = myCustomIndicator.cached
 ```
 
 ### How to combine indicators

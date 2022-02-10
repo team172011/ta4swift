@@ -8,12 +8,10 @@
 import Foundation
 
 public struct EMAIndicator: ValueIndicator {
-    public var cached: Bool
     
     public var calc: calcFuncTypeValue
     
-    init<T: ValueIndicator>(indicator: T,  barCount: Int, cached: Bool = true){
-        self.cached = cached
+    init<T: ValueIndicator>(indicator: T,  barCount: Int){
         let calc: calcFuncTypeValue = { barSeries, index in
             let multiplier = (2.0 / Double((barCount + 1)))
             
@@ -27,6 +25,6 @@ public struct EMAIndicator: ValueIndicator {
             
             return f_helper(barSeries, index, indicator, multiplier)
         }
-        self.calc = IndicatorFormularBuilder(cached: cached) { calc }.formular
+        self.calc = calc
     }
 }

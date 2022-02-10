@@ -9,8 +9,8 @@ import Foundation
 
 // returns true indicator1 crosses down indicator2/constant value
 public struct CrossedIndicator: BooleanIndicator {
+    public var cacheSize: Int = 0
     public var cached: Bool { get { false }}
-    
     
     public var calc: (BarSeries, Int) -> Bool
     

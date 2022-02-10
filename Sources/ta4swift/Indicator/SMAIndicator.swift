@@ -9,11 +9,9 @@ import Foundation
 
 public struct SMAIndicator: ValueIndicator {
     
-    public var cached: Bool
     public var calc: calcFuncTypeValue
     
     public init<T: ValueIndicator>(indicator: T,  barCount: Int, cached: Bool = true) {
-        self.cached = cached
         let calc: calcFuncTypeValue = { barSeries, index in
             var sum = 0.0
             if index - barCount >= 0 {
@@ -23,11 +21,10 @@ public struct SMAIndicator: ValueIndicator {
             }
             return sum / Double(barCount)
         }
-        self.calc = IndicatorFormularBuilder(cached: cached) { calc }.formular
+        self.calc = calc
     }
     
     public init(barCount: Int, cached: Bool = true) {
-        self.cached = cached
         let indicator = ClosePriceIndicator()
         let calc: calcFuncTypeValue = { barSeries, index in
             var sum = 0.0
@@ -38,6 +35,6 @@ public struct SMAIndicator: ValueIndicator {
             }
             return sum / Double(barCount)
         }
-        self.calc = IndicatorFormularBuilder(cached: cached) { calc }.formular
+        self.calc = calc
     }
 }
