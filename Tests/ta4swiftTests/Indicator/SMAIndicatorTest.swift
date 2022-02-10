@@ -22,5 +22,6 @@ final class SMAIndicatorTest: Ta4swiftTest {
         XCTAssertTrue(sma.calc(barSeries, 1) == 0, "SMA of index 1 should return 0")
         XCTAssertTrue(sma.calc(barSeries, 3) == 3)
         XCTAssertTrue(sma.calc(barSeries, 17) == 17);
+        
     }
 }

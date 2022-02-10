@@ -13,11 +13,17 @@ public typealias valueCacheType = (@escaping calcFuncTypeValue) -> calcFuncTypeV
  An Indicator holds a closure for calculating a value of a BarSeries at an index
  */
 public protocol Indicator {
+    
     /**
-     Flag if this ValueIndicator has a cache (activated)
+     The return type of this indicator
      */
-     var cached: Bool { get }
     associatedtype DataType
+    
+    /**
+     The formular f(x) = y for this inidcator and  a given bar series
+     */
+    var calc: (BarSeries, Int) -> DataType { get }
+    
 }
 
 public protocol BooleanIndicator: Indicator where DataType == Bool {
@@ -27,68 +33,55 @@ public protocol BooleanIndicator: Indicator where DataType == Bool {
 public protocol ValueIndicator: Indicator where DataType == Double {
     associatedtype ReturnValue
     var calc: calcFuncTypeValue { get }
-
+    
+    /**
+     The cached version of this indicator
+     */
+    var cached: CachedIndicator<Self> { get }
+    
+    /**
+     Creates a new ValueIndicator that calculates the sum of this indicator and the given indicator
+     */
     func plus<T: ValueIndicator>(_ indicator: T) -> ReturnValue
     
-    
+    /**
+     Creates a new ValueIndicator that calculates the difference of this indicator and the given indicator
+     */
     func minus<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    
+    /**
+     Creates a new ValueIndicator that calculates the product of this indicator and the given indicator
+     */
     func multiply<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    
+    /**
+     Creates a new ValueIndicator that calculates the divisor of this indicator and the given indicator
+     */
     func divide<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    
+    /**
+     Creates a new ValueIndicator that calculates the minimum value between this indicator and the given indicator
+     */
     func min<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    
+    /**
+     Creates a new ValueIndicator that calculates the sum of this indicator and the given indicator
+     */
     func max<T: ValueIndicator>(_ indicator: T) -> ReturnValue
     
+    /**
+     Creates a ValueIndicator that calculates the square root of this indicator
+     */
     func sqrt() -> ReturnValue
+    
+    /**
+     Creates a ValueIndicator that calculates the absolute value of this indicator
+     */
     func abs() -> ReturnValue
-
-     }
-
-public struct RawIndicator: ValueIndicator {
-    
-    public var calc: calcFuncTypeValue
-    
-    public var cached: Bool
-    
-    public init(_ cached: Bool = true, _ formular: @escaping () -> calcFuncTypeValue) {
-        self.cached = cached
-        self.calc = IndicatorFormularBuilder(cached: cached) { formular() }.formular
-    }
-    
-    public init(_ operation: @escaping () -> BinaryOperation){
-        self.init(false){operation().calc}
-    }
-    
-    public init(_ operation: @escaping () -> UnaryOperation){
-        self.init{operation().calc}
-    }
-}
-
-public class ClosePriceIndicator: ValueIndicator {
-    public var cached: Bool { get { false }}
-    public var calc: calcFuncTypeValue = {$0.bars[$1].closePrice}
-}
-
-public struct OpenPriceIndicator: ValueIndicator {
-    public var cached: Bool = false
-    public var calc: calcFuncTypeValue = {$0.bars[$1].openPrice}
-}
-
-public struct HighPriceIndicator: ValueIndicator {
-    public var cached: Bool = false
-    public var calc: calcFuncTypeValue = {$0.bars[$1].highPrice}
-}
-
-public struct LowPriceIndicator: ValueIndicator {
-    public var cached: Bool = false
-    public var calc: calcFuncTypeValue = {$0.bars[$1].lowPrice}
-}
-
-public struct VolumePriceIndicator: ValueIndicator {
-    public var cached: Bool = false
-    public var calc: calcFuncTypeValue = {Double($0.bars[$1].volume)}
 }
 
 public extension ValueIndicator {
-    
+
     func plus<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
         return RawIndicator{BinaryOperation.sum(left: self, right: indicator)}
     }
@@ -120,41 +113,57 @@ public extension ValueIndicator {
     func abs() -> RawIndicator {
         return RawIndicator { UnaryOperation.abs(indicator: self)}
     }
+    
+    var cached: CachedIndicator<Self> {
+        get {
+            return CachedIndicator(of: self)
+        }
+    }
 }
 
-public struct IndicatorFormularBuilder {
-    public typealias DataType = Double
+
+public struct CKey: Hashable {
     
-    let formular: calcFuncTypeValue;
+    var seriesName: String
+    var beginTime: Date
     
-    let cache: valueCacheType = {
-        calcFunction in
-        var cache: Dictionary<Date, DataType> = Dictionary()
-        let cachedCalc: calcFuncTypeValue = {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(seriesName)
+        hasher.combine(beginTime)
+    }
+}
+
+/**
+ A CachedIndicator is a wrapper class for an indicator structure. The result of the calc Closure will be cached in
+ an externat cache property
+ */
+public final class CachedIndicator<T: ValueIndicator>: ValueIndicator {
+    
+    public var calc: calcFuncTypeValue = {a,b in return 0.0}
+    var cache: Dictionary<CKey, DataType> = Dictionary()
+    
+    public init (of indicator: T) {
+        self.calc = {
             barSeries, index in
-            let key = barSeries.bars[index].beginTime
-            if let cachedValue = cache[key] {
+            let beginTime = barSeries.bars[index].beginTime
+            let key = CKey(seriesName: barSeries.name, beginTime: beginTime)
+            if let cachedValue = self.cache[key] {
                 #if Xcode
                 print("cache hit")
                 #endif
                 return cachedValue
             } else {
-                let value = calcFunction(barSeries, index)
-                cache[key] = value
+                let value = indicator.calc(barSeries, index)
+                self.cache[key] = value
                 #if Xcode
                 print("cache miss")
                 #endif
                 return value
             }
         }
-        return cachedCalc
     }
     
-    public init(cached: Bool = true, _ formular: @escaping () -> calcFuncTypeValue) {
-        if cached {
-            self.formular = cache(formular())
-        } else {
-            self.formular = formular()
-        }
+    static func of(_ indicator: T) -> CachedIndicator {
+        return CachedIndicator(of: indicator)
     }
 }
