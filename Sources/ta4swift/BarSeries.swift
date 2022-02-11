@@ -9,7 +9,7 @@ import Foundation
 /**
  A bar is representing financial data like open, high, low, close prices and volume at a specific date
  */
-public struct Bar {
+public struct Bar: Equatable {
     
     var openPrice: Double
     var highPrice: Double
