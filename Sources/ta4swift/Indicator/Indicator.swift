@@ -34,6 +34,16 @@ public protocol ValueIndicator: Indicator where DataType == Double {
     associatedtype ReturnValue
     var calc: calcFuncTypeValue { get }
     
+    /*
+     Returns an array of all calculated values for this bar series
+     */
+    func values(for barSeries: BarSeries) -> [Double]
+    
+    /*
+     Returns an array of all calculated values for this bar series
+     */
+    func valueMap(for barSeries: BarSeries) -> Dictionary<Date, Double>
+    
     /**
      The cached version of this indicator
      */
@@ -82,6 +92,22 @@ public protocol ValueIndicator: Indicator where DataType == Double {
 
 public extension ValueIndicator {
 
+    func values(for barSeries: BarSeries) -> [Double] {
+        var values = [Double]()
+        for i in 0..<barSeries.bars.count {
+            values.append(self.calc(barSeries, i))
+        }
+        return values
+    }
+    
+    func valueMap(for barSeries: BarSeries) -> Dictionary<Date, Double> {
+        var values = Dictionary<Date, Double>()
+        for (index, bar) in barSeries.bars.enumerated() {
+            values[bar.beginTime] = self.calc(barSeries, index)
+        }
+        return values
+    }
+    
     func plus<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
         return RawIndicator{BinaryOperation.sum(left: self, right: indicator)}
     }
@@ -122,10 +148,13 @@ public extension ValueIndicator {
 }
 
 
-public struct CKey: Hashable {
+public struct CKey: Hashable, CustomStringConvertible {
     
-    var seriesName: String
-    var beginTime: Date
+    public var seriesName: String
+    public var beginTime: Date
+    public var description: String {
+        return "\(seriesName): \(beginTime)"
+    }
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(seriesName)
