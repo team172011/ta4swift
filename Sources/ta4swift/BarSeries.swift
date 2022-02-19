@@ -60,36 +60,35 @@ extension BarSeries {
  */
 extension BarSeries {
     
-    public var close: RawIndicator {
+    public var close: ClosePriceIndicator {
         get {
-            return RawIndicator{ ClosePriceIndicator().calc }
+            ClosePriceIndicator()
+        }
+    }
+    
+    public var high: HighPriceIndicator {
+        get {
+            HighPriceIndicator()
         }
     }
                                                          
-    
-    public var high: RawIndicator {
+    public var low: LowPriceIndicator {
         get {
-            return RawIndicator{ HighPriceIndicator().calc }
-        }
-    }
-                                                         
-    public var low: RawIndicator {
-        get {
-            return RawIndicator{ LowPriceIndicator().calc }
+            LowPriceIndicator()
         }
     }
     
     
-    public var open: RawIndicator {
+    public var open: OpenPriceIndicator {
         get {
-            return RawIndicator{ OpenPriceIndicator().calc }
+            OpenPriceIndicator()
         }
     }
     
     
-    public var volume: RawIndicator {
+    public var volume: VolumePriceIndicator {
         get {
-            return RawIndicator{ VolumePriceIndicator().calc }
+            VolumePriceIndicator()
         }
     }
     
@@ -102,11 +101,11 @@ extension BarSeries {
 extension BarSeries {
     
     public func sma(barCount: Int) -> SMAIndicator {
-        return SMAIndicator(indicator: self.close, barCount: barCount)
+        return SMAIndicator(barCount: barCount) { self.close }
     }
     
     public func ema(barCount: Int) -> EMAIndicator {
-        return EMAIndicator(indicator: self.close, barCount: barCount)
+        return EMAIndicator(barCount: barCount) { self.close }
     }
     
     public func value<T: ValueIndicator>(_ indicator: T, _ index: Int) -> Double {

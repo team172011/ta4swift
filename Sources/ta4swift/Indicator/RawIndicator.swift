@@ -12,7 +12,7 @@ public struct RawIndicator: ValueIndicator {
     public var calc: calcFuncTypeValue
     
     /**
-     Creates a RawIndicator with the provided formular. The default behaviour does not activate a cache
+     Creates a RawIndicator with the provided formular.
      */
     public init( _ formular: @escaping () -> calcFuncTypeValue) {
         self.calc = formular()
