@@ -9,29 +9,12 @@ public typealias calcFuncTypeValue = (BarSeries, Int) -> Double
 public typealias calcFuncTypeBool = (BarSeries, Int) -> Bool
 public typealias valueCacheType = (@escaping calcFuncTypeValue) -> calcFuncTypeValue
 
-/**
- An Indicator holds a closure for calculating a value of a BarSeries at an index
- */
-public protocol Indicator {
-    
-    /**
-     The return type of this indicator
-     */
-    associatedtype DataType
-    
-    /**
-     The formular f(x) = y for this inidcator and  a given bar series
-     */
-    var calc: (BarSeries, Int) -> DataType { get }
-    
-}
-
-public protocol BooleanIndicator: Indicator where DataType == Bool {
+public protocol BooleanIndicator {
     var calc: calcFuncTypeBool { get }
 }
 
-public protocol ValueIndicator: Indicator where DataType == Double {
-    associatedtype ReturnValue
+public protocol ValueIndicator {
+    
     var calc: calcFuncTypeValue { get }
     
     /*
@@ -52,42 +35,46 @@ public protocol ValueIndicator: Indicator where DataType == Double {
     /**
      Creates a new ValueIndicator that calculates the sum of this indicator and the given indicator
      */
-    func plus<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    func plus<T: ValueIndicator>(_ indicator: T) -> RawIndicator
     
     /**
      Creates a new ValueIndicator that calculates the difference of this indicator and the given indicator
      */
-    func minus<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    func minus<T: ValueIndicator>(_ indicator: T) -> RawIndicator
     
     /**
      Creates a new ValueIndicator that calculates the product of this indicator and the given indicator
      */
-    func multiply<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    func multiply<T: ValueIndicator>(_ indicator: T) -> RawIndicator
+    
+    func multiply(_ value: Double) -> RawIndicator
     
     /**
      Creates a new ValueIndicator that calculates the divisor of this indicator and the given indicator
      */
-    func divide<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    func divide<T: ValueIndicator>(_ indicator: T) -> RawIndicator
+    
+    func divide(_ value: Double) -> RawIndicator
     
     /**
      Creates a new ValueIndicator that calculates the minimum value between this indicator and the given indicator
      */
-    func min<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    func min<T: ValueIndicator>(_ indicator: T) -> RawIndicator
     
     /**
      Creates a new ValueIndicator that calculates the sum of this indicator and the given indicator
      */
-    func max<T: ValueIndicator>(_ indicator: T) -> ReturnValue
+    func max<T: ValueIndicator>(_ indicator: T) -> RawIndicator
     
     /**
      Creates a ValueIndicator that calculates the square root of this indicator
      */
-    func sqrt() -> ReturnValue
+    func sqrt() -> RawIndicator
     
     /**
      Creates a ValueIndicator that calculates the absolute value of this indicator
      */
-    func abs() -> ReturnValue
+    func abs() -> RawIndicator
 }
 
 public extension ValueIndicator {
@@ -109,90 +96,48 @@ public extension ValueIndicator {
     }
     
     func plus<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        return RawIndicator{BinaryOperation.sum(left: self, right: indicator)}
+        RawIndicator{BinaryOperation.sum(left: self, right: indicator)}
     }
     
     func minus<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-         return RawIndicator { BinaryOperation.difference(left: self, right: indicator) }
+         RawIndicator { BinaryOperation.difference(left: self, right: indicator) }
      }
      
     func multiply<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        return RawIndicator { BinaryOperation.product(left: self, right: indicator) }
+        RawIndicator { BinaryOperation.product(left: self, right: indicator) }
+    }
+    
+    func multiply(_ value: Double) -> RawIndicator {
+        multiply(ConstantValueIndicator{value})
     }
     
     func divide<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        return RawIndicator{ BinaryOperation.quotient(left: self, right: indicator) }
+        RawIndicator{ BinaryOperation.quotient(left: self, right: indicator) }
+    }
+    
+    func divide(_ value: Double) -> RawIndicator {
+        divide(ConstantValueIndicator{value})
     }
     
     func min<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        return RawIndicator{ BinaryOperation.min(left: self, right: indicator) }
+        RawIndicator{ BinaryOperation.min(left: self, right: indicator) }
     }
     
     func max<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        return RawIndicator{ BinaryOperation.max(left: self, right: indicator) }
+        RawIndicator{ BinaryOperation.max(left: self, right: indicator) }
     }
     
     func sqrt() -> RawIndicator {
-        return RawIndicator{ UnaryOperation.sqrt(indicator: self) }
+        RawIndicator{ UnaryOperation.sqrt(indicator: self) }
     }
     
     func abs() -> RawIndicator {
-        return RawIndicator { UnaryOperation.abs(indicator: self)}
+        RawIndicator { UnaryOperation.abs(indicator: self)}
     }
     
     var cached: CachedIndicator<Self> {
         get {
             return CachedIndicator(of: self)
         }
-    }
-}
-
-
-public struct CKey: Hashable, CustomStringConvertible {
-    
-    public var seriesName: String
-    public var beginTime: Date
-    public var description: String {
-        return "\(seriesName): \(beginTime)"
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(seriesName)
-        hasher.combine(beginTime)
-    }
-}
-
-/**
- A CachedIndicator is a wrapper class for an indicator structure. The result of the calc Closure will be cached in
- an externat cache property
- */
-public final class CachedIndicator<T: ValueIndicator>: ValueIndicator {
-    
-    public var calc: calcFuncTypeValue = {a,b in return 0.0}
-    var cache: Dictionary<CKey, DataType> = Dictionary()
-    
-    public init (of indicator: T) {
-        self.calc = {
-            barSeries, index in
-            let beginTime = barSeries.bars[index].beginTime
-            let key = CKey(seriesName: barSeries.name, beginTime: beginTime)
-            if let cachedValue = self.cache[key] {
-                #if Xcode
-                print("cache hit")
-                #endif
-                return cachedValue
-            } else {
-                let value = indicator.calc(barSeries, index)
-                self.cache[key] = value
-                #if Xcode
-                print("cache miss")
-                #endif
-                return value
-            }
-        }
-    }
-    
-    static func of(_ indicator: T) -> CachedIndicator {
-        return CachedIndicator(of: indicator)
     }
 }

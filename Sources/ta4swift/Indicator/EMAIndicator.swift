@@ -11,7 +11,8 @@ public struct EMAIndicator: ValueIndicator {
     
     public var calc: calcFuncTypeValue
     
-    init<T: ValueIndicator>(indicator: T,  barCount: Int){
+    init<T: ValueIndicator>(barCount: Int, _ base: () -> T){
+        let indicator = base()
         let calc: calcFuncTypeValue = { barSeries, index in
             let multiplier = (2.0 / Double((barCount + 1)))
             

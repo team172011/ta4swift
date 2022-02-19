@@ -48,7 +48,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         assert(btc.bars != goog.bars)
         
         // get all values
-        // this should fill the cache for both series
+        // this should fill the cache for both series with different values
         let valuesBtc = sma.valueMap(for: btc)
         let valuesGoog = sma.valueMap(for: goog)
         
