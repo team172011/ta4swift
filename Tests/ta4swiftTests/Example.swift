@@ -53,6 +53,8 @@ final class Example: Ta4swiftTest {
         return BaseStrategy(entryRule: entryRule, exitRule: exitRule)
     }
     
+    // Example 3
+    
     func testExampleWithTwoSeries() {
         
         // create two series with ohlcv data
@@ -76,6 +78,22 @@ final class Example: Ta4swiftTest {
         print("Result of run for \(bitcoinSeriesName)")
         for (index, position) in tradingRecords[bitcoinSeriesName]!.positions.enumerated() {
             print("Position \(index): \(position)")
+        }
+    }
+    
+    // Example 4
+    
+    func testExampleWithValues() {
+        let aaplSeries = readAppleIncSeries("AAPL")
+        
+        let variance = VarianceIndicator(barCount: 10) { aaplSeries.close }
+        
+        let standardDeciatationValues = variance.sqrt().valueMap(for: aaplSeries)
+        let varianceValues = variance.valueMap(for: aaplSeries)
+        
+        for (date, value) in varianceValues{
+            print("Variance(10) for \(date): \(value)")
+            print("Standard Deviatation (10) for \(date): \(standardDeciatationValues[date]!)")
         }
     }
 }
