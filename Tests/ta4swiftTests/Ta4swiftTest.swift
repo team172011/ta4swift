@@ -17,6 +17,17 @@ public class Ta4swiftTest: XCTestCase {
         return dateFormatter
     }
     
+    func dateFor(year: Int, month: Int, day: Int, minute: Int = 0, hour: Int = 0) -> Date {
+        var dc = DateComponents()
+        dc.year = year
+        dc.month = month
+        dc.day = day
+        dc.timeZone = TimeZone(abbreviation: "UST")
+        dc.hour = hour
+        dc.minute = minute
+        let calendar = Calendar(identifier: .gregorian)
+        return calendar.date(from: dc)!
+    }
     
     func readAppleIncSeries(_ name: String) -> BarSeries {
         let dateFormatter = yahooDateFormatter()
@@ -33,8 +44,16 @@ public class Ta4swiftTest: XCTestCase {
     }
     
     func readBitcoinSeries(_ name: String) -> BarSeries {
+        return readBarSeriesFile(fileName: "BTC-USD", seriesName: name)
+    }
+    
+    func readGoogleSeries(_ name: String) -> BarSeries {
+        return readBarSeriesFile(fileName: "GOOG", seriesName: name)
+    }
+    
+    func readBarSeriesFile(fileName: String, seriesName: String) -> BarSeries {
         let dateFormatter = yahooDateFormatter()
-        let data = readFileAsStringArray(fileName: "BTC-USD")
+        let data = readFileAsStringArray(fileName: fileName)
         var bars = [Bar]()
         for row in data {
             let entries = row.components(separatedBy: ",")
@@ -43,8 +62,10 @@ public class Ta4swiftTest: XCTestCase {
             }
 
         }
-        return BarSeries(name: name, bars: bars)
+        return BarSeries(name: seriesName, bars: bars)
     }
+    
+    
     
     func readFileAsStringArray(fileName: String) -> [String]  {
         if let filePath = Bundle.module.path(forResource: fileName, ofType: "csv"){
@@ -102,7 +123,7 @@ extension Ta4swiftTest {
     func printValues<T: BooleanIndicator>(_ barSeries: BarSeries, _ indicator: T) {
         #if Xcode
         for (i, _) in barSeries.bars.enumerated() {
-            print("index: \(i) value: \(indicator.f(barSeries, i))")
+            print("index: \(i) value: \(indicator.calc(barSeries, i))")
         }
         #endif
     }
@@ -113,7 +134,7 @@ extension Ta4swiftTest {
     func printValues<T: ValueIndicator>(_ barSeries: BarSeries, _ indicator: T) {
         #if Xcode
         for (i, _) in barSeries.bars.enumerated() {
-            print("index: \(i) value: \(indicator.f(barSeries, i))")
+            print("index: \(i) value: \(indicator.calc(barSeries, i))")
         }
         #endif
     }

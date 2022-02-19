@@ -9,7 +9,7 @@ import Foundation
 /**
  A bar is representing financial data like open, high, low, close prices and volume at a specific date
  */
-public struct Bar {
+public struct Bar: Equatable {
     
     var openPrice: Double
     var highPrice: Double
@@ -60,36 +60,35 @@ extension BarSeries {
  */
 extension BarSeries {
     
-    public var close: NumericIndicator {
+    public var close: ClosePriceIndicator {
         get {
-            return NumericIndicator{ ClosePriceIndicator() }
+            ClosePriceIndicator()
+        }
+    }
+    
+    public var high: HighPriceIndicator {
+        get {
+            HighPriceIndicator()
         }
     }
                                                          
-    
-    public var high: NumericIndicator {
+    public var low: LowPriceIndicator {
         get {
-            return NumericIndicator{ HighPriceIndicator() }
-        }
-    }
-                                                         
-    public var low: NumericIndicator {
-        get {
-            return NumericIndicator{ LowPriceIndicator()}
+            LowPriceIndicator()
         }
     }
     
     
-    public var open: NumericIndicator {
+    public var open: OpenPriceIndicator {
         get {
-            return NumericIndicator{ OpenPriceIndicator() }
+            OpenPriceIndicator()
         }
     }
     
     
-    public var volume: NumericIndicator {
+    public var volume: VolumePriceIndicator {
         get {
-            return NumericIndicator{ VolumePriceIndicator() }
+            VolumePriceIndicator()
         }
     }
     
@@ -102,14 +101,14 @@ extension BarSeries {
 extension BarSeries {
     
     public func sma(barCount: Int) -> SMAIndicator {
-        return SMAIndicator(indicator: self.close, barCount: barCount)
+        return SMAIndicator(barCount: barCount) { self.close }
     }
     
     public func ema(barCount: Int) -> EMAIndicator {
-        return EMAIndicator(indicator: self.close, barCount: barCount)
+        return EMAIndicator(barCount: barCount) { self.close }
     }
     
     public func value<T: ValueIndicator>(_ indicator: T, _ index: Int) -> Double {
-        return indicator.f(self, index)
+        return indicator.calc(self, index)
     }
 }

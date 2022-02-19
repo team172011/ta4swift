@@ -9,22 +9,23 @@ import Foundation
 
 public struct EMAIndicator: ValueIndicator {
     
-    public var f: (BarSeries, Int) -> Double
+    public var calc: calcFuncTypeValue
     
-    init<T: ValueIndicator>(indicator: T,  barCount: Int){
-        
-        self.f = { barSeries, index in
+    init<T: ValueIndicator>(barCount: Int, _ base: () -> T){
+        let indicator = base()
+        let calc: calcFuncTypeValue = { barSeries, index in
             let multiplier = (2.0 / Double((barCount + 1)))
             
             func f_helper<T: ValueIndicator>(_ barSeries: BarSeries, _ index: Int, _ indicator: T, _ multiplier: Double) -> Double {
                 if (index == 0) {
-                    return indicator.f(barSeries, 0);
+                    return indicator.calc(barSeries, 0);
                 }
                 let prevValue = f_helper(barSeries, index - 1, indicator, multiplier);
-                return (indicator.f(barSeries, index) - prevValue) * multiplier + prevValue;
+                return (indicator.calc(barSeries, index) - prevValue) * multiplier + prevValue;
             }
             
             return f_helper(barSeries, index, indicator, multiplier)
         }
+        self.calc = calc
     }
 }

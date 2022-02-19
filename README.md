@@ -129,6 +129,7 @@ for (date, value) in varianceValues{
 ```
 
 ### 5 Re-use indicators and strategies to run it on different bar series
+
 ``` swift
 // Closure for creating an example strategy that can be reused
 let emaShortLongStrategy: () -> Strategy = {

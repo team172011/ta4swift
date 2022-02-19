@@ -17,9 +17,9 @@ final class CrossIndicatorTest: Ta4swiftTest {
         let close = barSeries.close
         let sma = CrossedIndicator(indicator1: close, constant: 8)
         
-        XCTAssertFalse(sma.f(barSeries, 0))
-        XCTAssertFalse(sma.f(barSeries, 1))
-        XCTAssertTrue(sma.f(barSeries, 9))
-        XCTAssertTrue(sma.f(barSeries, 18))
+        XCTAssertFalse(sma.calc(barSeries, 0))
+        XCTAssertFalse(sma.calc(barSeries, 1))
+        XCTAssertTrue(sma.calc(barSeries, 9))
+        XCTAssertTrue(sma.calc(barSeries, 18))
     }
 }
