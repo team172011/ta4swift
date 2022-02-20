@@ -12,9 +12,13 @@ public struct EMAIndicator: ValueIndicator {
     public var calc: calcFuncTypeValue
     
     init<T: ValueIndicator>(barCount: Int, _ base: () -> T){
+        self.init(barCount: barCount, multiplier: 2.0 / Double((barCount + 1)), base)
+    }
+    
+    init<T: ValueIndicator>(barCount: Int, multiplier: Double,  _ base: () -> T){
         let indicator = base()
-        let calc: calcFuncTypeValue = { barSeries, index in
-            let multiplier = (2.0 / Double((barCount + 1)))
+        self.calc = {
+            barSeries, index in
             
             func f_helper<T: ValueIndicator>(_ barSeries: BarSeries, _ index: Int, _ indicator: T, _ multiplier: Double) -> Double {
                 if (index == 0) {
@@ -26,6 +30,5 @@ public struct EMAIndicator: ValueIndicator {
             
             return f_helper(barSeries, index, indicator, multiplier)
         }
-        self.calc = calc
     }
 }
