@@ -96,4 +96,5 @@ final class Example: Ta4swiftTest {
             print("Standard Deviatation (10) for \(date): \(standardDeciatationValues[date]!)")
         }
     }
+    
 }

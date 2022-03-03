@@ -29,14 +29,3 @@ public struct TRIndicator: ValueIndicator {
         
     }
 }
-
-public extension Double {
-    
-    func max(_ other: Double) -> Double {
-        Swift.max(self, other)
-    }
-    
-    func abs() -> Double {
-        Swift.abs(self)
-    }
-}

@@ -11,6 +11,8 @@ import XCTest
 
 public class Ta4swiftTest: XCTestCase {
 
+    public let accuracy = 0.0000000001
+    
     let yahooDateFormatter: () -> DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -90,6 +92,15 @@ public class Ta4swiftTest: XCTestCase {
         return bars
     }
     
+    func createBarsFixed(_ closePrices: Double...) -> [Bar] {
+        var bars = [Bar]()
+        let now = Date()
+        for (index, price) in closePrices.enumerated() {
+            bars.append(createBar(price, price, price, price, 100, now + TimeInterval((index * 60))))
+        }
+        return bars
+    }
+    
     func createBar(_ close: Double, _ date: Date) -> Bar {
         let high = Double.random(in: close...close*2)
         let low = Double.random(in: close*0.5...close)
@@ -159,5 +170,13 @@ extension Ta4swiftTest {
             print("index: \(i) value: \(b)")
         }
         #endif
+    }
+}
+
+
+extension Ta4swiftTest {
+    
+    public func assertEqualsT(_ value1: Double, _ value2: Double) {
+        XCTAssertEqual(value1, value2, accuracy: accuracy)
     }
 }
