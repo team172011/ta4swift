@@ -15,10 +15,10 @@ final class ATRIndicatorTest: Ta4swiftTest {
         
         let barSeries = BarSeries(name: "Test")
         barSeries.bars.append(Bar(openPrice: 0, highPrice: 15, lowPrice: 8, closePrice: 12, volume: 0, beginTime: Date() + 1))
-        barSeries.bars.append(Bar(openPrice: 0, highPrice: 11, lowPrice: 6, closePrice: 8, volume: 0, beginTime: Date() + 1))
-        barSeries.bars.append(Bar(openPrice: 0, highPrice: 17, lowPrice: 14, closePrice: 15, volume: 0, beginTime: Date() + 1))
-        barSeries.bars.append(Bar(openPrice: 0, highPrice: 17, lowPrice: 14, closePrice: 15, volume: 0, beginTime: Date() + 1))
-        barSeries.bars.append(Bar(openPrice: 0, highPrice: 0, lowPrice: 0, closePrice: 0, volume: 0, beginTime: Date() + 1))
+        barSeries.bars.append(Bar(openPrice: 0, highPrice: 11, lowPrice: 6, closePrice: 8, volume: 0, beginTime: Date() + 2))
+        barSeries.bars.append(Bar(openPrice: 0, highPrice: 17, lowPrice: 14, closePrice: 15, volume: 0, beginTime: Date() + 3))
+        barSeries.bars.append(Bar(openPrice: 0, highPrice: 17, lowPrice: 14, closePrice: 15, volume: 0, beginTime: Date() + 4))
+        barSeries.bars.append(Bar(openPrice: 0, highPrice: 0, lowPrice: 0, closePrice: 0, volume: 0, beginTime: Date() + 5))
         
         let atr = ATRIndicator(barCount: 3)
         
