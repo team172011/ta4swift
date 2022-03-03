@@ -141,3 +141,33 @@ public extension ValueIndicator {
         }
     }
 }
+
+public extension Double {
+    
+    func max(_ other: Double) -> Double {
+        Swift.max(self, other)
+    }
+    
+    func max(_ other: Int) -> Double {
+        Swift.max(self, Double(other))
+    }
+    
+    func abs() -> Double {
+        Swift.abs(self)
+    }
+}
+
+public extension Int {
+    
+    func max(_ other: Double) -> Int {
+        Swift.max(self, Int(other))
+    }
+    
+    func max(_ other: Int) -> Int {
+        Swift.max(self, other)
+    }
+    
+    func abs() -> Int {
+        Swift.abs(self)
+    }
+}

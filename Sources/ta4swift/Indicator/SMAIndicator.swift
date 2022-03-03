@@ -25,7 +25,7 @@ public struct SMAIndicator: ValueIndicator {
         let indicator = base()
         let calc: calcFuncTypeValue = { barSeries, index in
             var sum = 0.0
-            for i in Swift.max(0, index - barCount + 1)...index {
+            for i in 0.max(index - barCount + 1)...index {
                 sum += indicator.calc(barSeries, i)
             }
             return sum / Double(Swift.min(barCount, index + 1))
