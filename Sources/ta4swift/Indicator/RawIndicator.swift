@@ -5,8 +5,10 @@
 //  Created by Simon-Justus Wimmer on 09.02.22.
 //
 
-import Foundation
-
+/**
+ A Raw Indicator is the simplest represenation of an indicator. It can be instantiated by providing a
+ calc function or an operation type
+ */
 public struct RawIndicator: ValueIndicator {
     
     public var calc: calcFuncTypeValue

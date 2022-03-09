@@ -23,14 +23,19 @@ public protocol ValueIndicator {
     func values(for barSeries: BarSeries) -> [Double]
     
     /*
-     Returns an array of all calculated values for this bar series
+     Returns an Map<Date, Value> of all calculated values for this bar series
      */
     func valueMap(for barSeries: BarSeries) -> Dictionary<Date, Double>
     
     /**
      The cached version of this indicator
      */
-    var cached: CachedIndicator<Self> { get }
+    func cached() -> CachedIndicator<Self>
+    
+    /**
+     The cached version of this indicator
+     */
+    func cached(timeInterval: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator<Self>
     
     /**
      Creates a new ValueIndicator that calculates the sum of this indicator and the given indicator
@@ -135,10 +140,12 @@ public extension ValueIndicator {
         RawIndicator { UnaryOperation.abs(indicator: self)}
     }
     
-    var cached: CachedIndicator<Self> {
-        get {
-            return CachedIndicator(of: self)
-        }
+    func cached() -> CachedIndicator<Self> {
+        return CachedIndicator(of: self)
+    }
+    
+    func cached(timeInterval: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator<Self> {
+        return CachedIndicator(of: self, timeSpan: timeInterval, updateInterval: updateInterval)
     }
 }
 
@@ -150,6 +157,14 @@ public extension Double {
     
     func max(_ other: Int) -> Double {
         Swift.max(self, Double(other))
+    }
+    
+    func min(_ other: Double) -> Double {
+        Swift.min(self, other)
+    }
+    
+    func min(_ other: Int) -> Double {
+        Swift.min(self, Double(other))
     }
     
     func abs() -> Double {
@@ -165,6 +180,14 @@ public extension Int {
     
     func max(_ other: Int) -> Int {
         Swift.max(self, other)
+    }
+    
+    func min(_ other: Double) -> Int {
+        Swift.min(self, Int(other))
+    }
+    
+    func min(_ other: Int) -> Int {
+        Swift.min(self, other)
     }
     
     func abs() -> Int {
