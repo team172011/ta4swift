@@ -144,6 +144,11 @@ public extension ValueIndicator {
         return CachedIndicator(of: self)
     }
     
+    /**
+     Creates a cached version of this inidcator
+        - timeInteral:          the size of the cache in seconds (e.g. the cache should store values for one minute = 60 or one day = 60 * 24)
+        - updateInterval:    the update intervale in seconds (e.g. how often should the cache be updated and remove old values)
+     */
     func cached(timeInterval: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator<Self> {
         return CachedIndicator(of: self, timeSpan: timeInterval, updateInterval: updateInterval)
     }
