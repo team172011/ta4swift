@@ -16,6 +16,7 @@ public class Ta4swiftTest: XCTestCase {
     let yahooDateFormatter: () -> DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
         return dateFormatter
     }
     

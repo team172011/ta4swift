@@ -75,7 +75,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         // fill cache by calculating all values
         let _ = smaCached2.values(for: barSeries)
         
-        XCTAssertEqual(barSeries.bars.count / 2, smaCached2.exportCache(for: barSeries)?.values.count)
+        XCTAssertEqual(barSeries.bars.count / 2 + 1, smaCached2.exportCache(for: barSeries)?.values.count)
         
         // create another instance with very large update intervall
         let smaCached3 = sma.cached(timeInterval: cacheSize, updateInterval: 1000000)
@@ -163,8 +163,8 @@ final class CachedIndicatorTest: Ta4swiftTest {
                 let value = smaCached.calc(barSeries, index)
                 let smaValue = sma.calc(barSeries, index)
                 assertEqualsT(value, smaValue)
-                //XCTAssertTrue(smaCached.exportCache(for: "BTC")!.values.count < 30)
-                print(smaCached.exportCache(for: "BTC")!.values.count)
+                XCTAssertTrue(smaCached.exportCache(for: "BTC")!.values.count < 40)
+                
             }
         }
         
