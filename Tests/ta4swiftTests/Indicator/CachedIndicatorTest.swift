@@ -7,17 +7,51 @@
 
 import Foundation
 import XCTest
+import Logging
+
 @testable import ta4swift
 
 final class CachedIndicatorTest: Ta4swiftTest {
     
-    func testCachedIndicatorCreation() {
+    func testCachingVsNoneCaching() {
+        let logger = Logger(label: #function)
+        let barSeries = readBitcoinSeries("BTC")
+        let sma = SMAIndicator(barCount: 10)
+        let cacheSize = (barSeries.bars.last!.beginTime - barSeries.bars.first!.beginTime)
+        let updateInterval = 60 * 24 
+        
+        var startTimer = Date()
+        calcAllValues(barSeries, sma, 105)
+        let endTimeNoCache = Date() - startTimer
+        
+        startTimer = Date()
+        calcAllValues(barSeries, sma.cached(timeInterval: cacheSize, updateInterval: Double(updateInterval)), 5)
+        let endTimeCache = Date() - startTimer
+        
+        logger.info("No cache: \(endTimeNoCache) vs cache: \(endTimeCache)")
+        
+        XCTAssertTrue(endTimeNoCache > endTimeCache)
+    }
+    
+    func calcAllValues<T>(_ barSeries: BarSeries, _ indicator: T, _ times: Int = 1) where T: ValueIndicator {
+        for _ in 1...times {
+            for i in 0..<barSeries.bars.count{
+                let _ = indicator.calc(barSeries, i)
+            }
+        }
+    }
+    
+    func testCacheSizeAndUpdateIntervall() {
+        let logger = Logger(label: #function)
+        let startTime = Date();
+        
         let barSeries = readBitcoinSeries("BTC")
         
         let sma = SMAIndicator(barCount: 10)
         
         // Create sma indicator that is cached and the cache has a size of first to last bar series and gets updated every second
-        let smaCached = sma.cached(timeInterval: barSeries.bars.first!.beginTime - barSeries.bars.last!.beginTime, updateInterval: 1)
+        let cacheSize = barSeries.bars.last!.beginTime - barSeries.bars.first!.beginTime
+        let smaCached = sma.cached(timeInterval:  cacheSize, updateInterval: 1)
         
         // check for correcrt values
         for (index, _) in barSeries.bars.enumerated() {
@@ -25,7 +59,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         }
         
         // check for correct cached values count
-        XCTAssertEqual(barSeries.bars.count, smaCached.exportCache(for: "BTC")!.values.count)
+        XCTAssertEqual(barSeries.bars.count, smaCached.exportCache(for: barSeries)!.values.count)
     
         
         smaCached.clearCache(for: "BTC")
@@ -33,7 +67,25 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let _ = smaCached.calc(barSeries, 0)
         let _ = smaCached.calc(barSeries, 16)
         
-        XCTAssertEqual(smaCached.exportCache(for: "BTC")?.values.count, 2)
+        XCTAssertEqual(smaCached.exportCache(for: barSeries)?.values.count, 2)
+        
+        // create another instance with half cache size
+        let smaCached2 = sma.cached(timeInterval:  cacheSize / 2, updateInterval: 1)
+        
+        // fill cache by calculating all values
+        let _ = smaCached2.values(for: barSeries)
+        
+        XCTAssertEqual(barSeries.bars.count / 2, smaCached2.exportCache(for: barSeries)?.values.count)
+        
+        // create another instance with very large update intervall
+        let smaCached3 = sma.cached(timeInterval: cacheSize, updateInterval: 1000000)
+        
+        // fill cache by calculating all values
+        let _ = smaCached3.values(for: barSeries)
+        
+        XCTAssertEqual(barSeries.bars.count, smaCached3.exportCache(for: barSeries)?.values.count)
+        
+        logger.info("Time for test: \(Date() - startTime)")
     }
     
     func testCachedIndicatorWithTwoSeriesAndNoUpdates() {

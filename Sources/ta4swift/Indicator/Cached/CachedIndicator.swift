@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logging
 
 /**
  A CachedIndicator is a wrapper class for an indicator structure. The result of the calc Closure will be cached in
@@ -13,6 +14,7 @@ import Foundation
  */
 public final class CachedIndicator<T: ValueIndicator>: ValueIndicator {
     
+    let logger = Logger(label: "CachedIndicator \(T.self)")
     public var calc: calcFuncTypeValue = {a,b in return 0.0}
     var seriesCaches: Dictionary<String, DateCache> = Dictionary()
     
@@ -34,16 +36,12 @@ public final class CachedIndicator<T: ValueIndicator>: ValueIndicator {
             let beginTime = barSeries.bars[index].beginTime
             let seriesCache = self.getSeriesCache(barSeries.name)
             if let cachedValue = seriesCache.values[beginTime] {
-                #if Xcode
-                print("cache hit")
-                #endif
+                self.logger.debug("cache hit")
                 return cachedValue
             } else {
                 let value = indicator.calc(barSeries, index)
                 seriesCache.update(for: beginTime, with: value)
-                #if Xcode
-                print("cache miss")
-                #endif
+                self.logger.debug("cache miss")
                 return value
             }
         }
@@ -55,6 +53,10 @@ public final class CachedIndicator<T: ValueIndicator>: ValueIndicator {
     
     public func clearCache(for seriesName: String) {
         self.seriesCaches[seriesName]?.clear()
+    }
+    
+    public func exportCache(for series: BarSeries) -> DateCache? {
+        return exportCache(for: series.name)
     }
     
     public func exportCache(for seriesName: String) -> DateCache? {

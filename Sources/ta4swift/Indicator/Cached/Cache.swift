@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Logging
 
 public protocol Cache: NSCopying {
     associatedtype K
@@ -18,7 +19,7 @@ public protocol Cache: NSCopying {
 
 public class DateCache: Cache {
     
-    
+    let logger = Logger(label: "Cache")
     /**
     Size of cache in seconds e.g. one day or a week
      */
@@ -53,9 +54,9 @@ public class DateCache: Cache {
     public func update(for currentTime: Date, with value: Double) {
         if let lastUpdated = lastUpdated {
             let currentTimespan = lastUpdated - currentTime
-            print("TimeSpan \(timeSpan), \(currentTimespan.abs())")
+            logger.debug("TimeSpan \(timeSpan), \(currentTimespan.abs())")
             if currentTimespan.abs() > updateInterval {
-                print("Update interval (\(updateInterval) reached. Clear values older than \(timeSpan)")
+                logger.debug("Update interval (\(updateInterval) reached. Clear values older than \(timeSpan)")
                 self.lastUpdated = currentTime
                 clearObsoleteValues(currentTime: currentTime)
             }
@@ -68,10 +69,10 @@ public class DateCache: Cache {
     
     func clearObsoleteValues(currentTime: Date) {
         for (key, value) in self.values {
-            print("Check value for \(key) (\(value))")
+            logger.debug("Check value for \(key) (\(value))")
             let currentTimespan = key - currentTime
             if(currentTimespan.abs() > self.timeSpan) {
-                print("Remove old value for (\(key)) diff: \(currentTimespan)")
+                logger.debug("Remove old value for (\(key)) diff: \(currentTimespan)")
                 self.values.removeValue(forKey: key)
             }
         }

@@ -29,7 +29,7 @@ public struct Bar: Equatable {
  A bar series is representing a set of bars and should have an name as identifier
  */
 public class BarSeries {
-    
+
     let name: String
     var bars = [Bar]()
     
