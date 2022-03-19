@@ -11,11 +11,12 @@ import XCTest
 
 public class Ta4swiftTest: XCTestCase {
 
-    public let accuracy = 0.0000000001
+    public var accuracy = 0.0000000001
     
     let yahooDateFormatter: () -> DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
         return dateFormatter
     }
     
