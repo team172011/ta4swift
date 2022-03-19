@@ -11,7 +11,8 @@ import Foundation
  Average true range indicator
  */
 public struct ATRIndicator: ValueIndicator {
-    public var calc: calcFuncTypeValue
+    
+    public var calc: (BarSeries, Int) -> Double
     
     
     public init(barCount: Int) {

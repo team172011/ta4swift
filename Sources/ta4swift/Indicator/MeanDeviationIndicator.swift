@@ -8,9 +8,9 @@
 import Foundation
 
 public struct MeanDeviationIndicator: ValueIndicator {
-    public var calc: calcFuncTypeValue
+    public var calc: (BarSeries, Int) -> Double
     
-    public init<T: ValueIndicator>(barCount: Int, _ base: () -> T){
+    public init(barCount: Int, _ base: () -> ValueIndicator){
         let baseIndicator = base()
         let baseIndicatorSma = SMAIndicator(barCount: barCount){ baseIndicator }
         self.calc = { barSeries, index in

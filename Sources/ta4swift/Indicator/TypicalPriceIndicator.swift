@@ -7,7 +7,7 @@
 
 import Foundation
 public struct TypicalPriceIndicator: ValueIndicator {
-    public var calc: calcFuncTypeValue
+    public var calc: (BarSeries, Int) -> Double
     
     
     public init() {

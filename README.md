@@ -28,11 +28,11 @@ A `BarSeries` is a class containing a **name** property and an array of `Bars`. 
 <a name="indicator"></a>
 #### Indicator 
 Indicators are *structs* that store a specific formular as a property called `calc`. The formular is defined as a closure and describes how a value of this indicator for a specific index is calcuated:
-- `public typealias calcFuncTypeValue = (BarSeries, Int) -> Double`
+- `public typealias (BarSeries, Int) -> Double = (BarSeries, Int) -> Double`
     - the closure takes two arguments: the `BarSeries` on that this inidcator should be applied on and the *index* for which the value should be calculated. The index and the corresponding barSeries must be provided for each call of the closure.
     - as an example, the **calc** closure for the `SMAIndicator` would look like this:
     ``` swift
-        let calc: calcFuncTypeValue = { barSeries, index in
+        let calc: (BarSeries, Int) -> Double = { barSeries, index in
         var sum = 0.0
         for i in Swift.max(0, index - barCount + 1)...index {
             sum += indicator.calc(barSeries, i)

@@ -12,10 +12,10 @@ import Logging
  A CachedIndicator is a wrapper class for an indicator structure. The result of the calc Closure will be cached in
  an external cache property
  */
-public final class CachedIndicator<T: ValueIndicator>: ValueIndicator {
+public final class CachedIndicator: ValueIndicator {
     
-    let logger = Logger(label: "CachedIndicator \(T.self)")
-    public var calc: calcFuncTypeValue = {a,b in return 0.0}
+    let logger: Logger
+    public var calc: (BarSeries, Int) -> Double = {a,b in return 0.0}
     var seriesCaches: Dictionary<String, DateCache> = Dictionary()
     
     /**
@@ -28,7 +28,8 @@ public final class CachedIndicator<T: ValueIndicator>: ValueIndicator {
      */
     var updateInverval: TimeInterval
     
-    public init (of indicator: T, timeSpan: TimeInterval = 1, updateInterval: TimeInterval = 1) {
+    public init (of indicator: ValueIndicator, timeSpan: TimeInterval = 1, updateInterval: TimeInterval = 1) {
+        self.logger = Logger(label: "CachedIndicator \(indicator)")
         self.timeSpan = timeSpan
         self.updateInverval = updateInterval
         self.calc = {
@@ -73,11 +74,11 @@ public final class CachedIndicator<T: ValueIndicator>: ValueIndicator {
         }
     }
     
-    static func of(_ indicator: T) -> CachedIndicator {
+    static func of(_ indicator: ValueIndicator) -> CachedIndicator {
         return CachedIndicator(of: indicator)
     }
     
-    static func of(_ indicator: T, timeSpan: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator {
+    static func of(_ indicator: ValueIndicator, timeSpan: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator {
         return CachedIndicator(of: indicator, timeSpan: timeSpan, updateInterval: updateInterval)
     }
 }
