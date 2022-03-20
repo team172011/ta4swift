@@ -18,7 +18,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let barSeries = readBitcoinSeries("BTC")
         let sma = SMAIndicator(barCount: 10)
         let cacheSize = (barSeries.bars.last!.beginTime - barSeries.bars.first!.beginTime)
-        let updateInterval = 60 * 24 
+        let updateInterval = 60 * 24 * 7
         
         var startTimer = Date()
         calcAllValues(barSeries, sma, 105)
