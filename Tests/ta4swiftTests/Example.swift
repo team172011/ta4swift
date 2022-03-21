@@ -67,18 +67,24 @@ final class Example: Ta4swiftTest {
         // run the strategy on both series
         let tradingRecords = Runner.run(barSeries: [applSeries, bitcoinSeries], strategy: strategy, type: .buy)
         
+        #if Xcode
         // print result of runs
         let appleSeriesName = applSeries.name
+        
         print("Result of run for \(appleSeriesName)")
+        
         for (index, position) in tradingRecords[appleSeriesName]!.positions.enumerated() {
             print("Position \(index): \(position)")
         }
         
         let bitcoinSeriesName = bitcoinSeries.name
+        
         print("Result of run for \(bitcoinSeriesName)")
+        
         for (index, position) in tradingRecords[bitcoinSeriesName]!.positions.enumerated() {
             print("Position \(index): \(position)")
         }
+        #endif
     }
     
     // Example 4
@@ -91,10 +97,12 @@ final class Example: Ta4swiftTest {
         let standardDeciatationValues = variance.sqrt().valueMap(for: aaplSeries)
         let varianceValues = variance.valueMap(for: aaplSeries)
         
+        #if Xcode
         for (date, value) in varianceValues{
             print("Variance(10) for \(date): \(value)")
             print("Standard Deviatation (10) for \(date): \(standardDeciatationValues[date]!)")
         }
+        #endif
     }
     
 }
