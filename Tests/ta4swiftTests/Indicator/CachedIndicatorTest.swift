@@ -16,7 +16,8 @@ final class CachedIndicatorTest: Ta4swiftTest {
     func testCachingVsNoneCaching() {
         let logger = Logger(label: #function)
         let barSeries = readBitcoinSeries("BTC")
-        let sma = SMAIndicator(barCount: 10)
+        let std = StandardDeviationIndicator(barCount: 15) {barSeries.close}
+        let sma = SMAIndicator(barCount: 10){ std }
         let cacheSize = (barSeries.bars.last!.beginTime - barSeries.bars.first!.beginTime)
         let updateInterval = 60 * 24 * 7
         
