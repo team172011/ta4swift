@@ -31,7 +31,8 @@ public class DateCache: Cache {
     let updateInterval: TimeInterval
     
     var values: Dictionary<Date, Double> = Dictionary()
-   
+    
+    var sortedKeys: [Date]
     
     private var lastUpdated: Date?
 
@@ -40,6 +41,7 @@ public class DateCache: Cache {
         self.values = Dictionary()
         self.timeSpan = timeSpan
         self.updateInterval = updateInterval
+        self.sortedKeys = []
     }
     
     public func getValue(for key: Date) -> Double {
@@ -48,6 +50,7 @@ public class DateCache: Cache {
     
     public func clear() {
         self.values.removeAll()
+        self.sortedKeys.removeAll()
         self.lastUpdated = nil
     }
     
@@ -65,15 +68,19 @@ public class DateCache: Cache {
         }
         self.values[currentTime] = value
         
+        let index = self.sortedKeys.insertionIndexOf(currentTime){ date1, date2 in date1 < date2 }
+        self.sortedKeys.insert(currentTime, at: index)
     }
     
     func clearObsoleteValues(currentTime: Date) {
-        for (key, value) in self.values {
-            logger.debug("Check value for \(key) (\(value))")
-            let currentTimespan = key - currentTime
-            if(currentTimespan.abs() > self.timeSpan) {
-                logger.debug("Remove old value for (\(key)) diff: \(currentTimespan)")
-                self.values.removeValue(forKey: key)
+        for value in sortedKeys {
+            logger.debug("Check (\(value))")
+            let currentTimespan = currentTime - value
+            if(currentTimespan > self.timeSpan) {
+                logger.debug("Remove old value for (\(value)) diff: \(currentTimespan)")
+                self.values.removeValue(forKey: value)
+            } else {
+                break
             }
         }
     }
@@ -93,5 +100,24 @@ public extension Date {
      */
     static func - (lhs: Date, rhs: Date) -> TimeInterval {
         return lhs.timeIntervalSinceReferenceDate - rhs.timeIntervalSinceReferenceDate
+    }
+}
+
+
+public extension Array {
+    func insertionIndexOf(_ elem: Element, isOrderedBefore: (Element, Element) -> Bool) -> Int {
+        var lo = 0
+        var hi = self.count - 1
+        while lo <= hi {
+            let mid = (lo + hi)/2
+            if isOrderedBefore(self[mid], elem) {
+                lo = mid + 1
+            } else if isOrderedBefore(elem, self[mid]) {
+                hi = mid - 1
+            } else {
+                return mid // found at position mid
+            }
+        }
+        return lo // not found, would be inserted at position lo
     }
 }

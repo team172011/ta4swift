@@ -34,7 +34,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         XCTAssertTrue(endTimeNoCache > endTimeCache)
     }
     
-    func calcAllValues<T>(_ barSeries: BarSeries, _ indicator: T, _ times: Int = 1) where T: ValueIndicator {
+    func calcAllValues(_ barSeries: BarSeries, _ indicator: ValueIndicator, _ times: Int = 1) {
         for _ in 1...times {
             for i in 0..<barSeries.bars.count{
                 let _ = indicator.calc(barSeries, i)
