@@ -13,7 +13,7 @@ import Logging
 
 final class CachedIndicatorTest: Ta4swiftTest {
     
-    func testCachingVsNoneCaching() {
+    func testCachingVsNoneCachingDateCache() {
         let logger = Logger(label: #function)
         let barSeries = readBitcoinSeries("BTC")
         let std = StandardDeviationIndicator(barCount: 15) {barSeries.close}
@@ -21,13 +21,32 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let cacheSize = (barSeries.bars.last!.beginTime - barSeries.bars.first!.beginTime)
         let updateInterval = 60 * 24 * 7
         
-        var startTimer = Date()
+        var startTime = Date()
         calcAllValues(barSeries, sma, 105)
-        let endTimeNoCache = Date() - startTimer
+        let endTimeNoCache = startTime.distance(to: Date())
         
-        startTimer = Date()
-        calcAllValues(barSeries, sma.cached(timeInterval: cacheSize, updateInterval: Double(updateInterval)), 5)
-        let endTimeCache = Date() - startTimer
+        startTime = Date()
+        calcAllValues(barSeries, DateCache.of(sma, timeSpan: cacheSize, updateInterval: Double(updateInterval)), 5)
+        let endTimeCache = startTime.distance(to: Date())
+        
+        logger.info("No cache: \(endTimeNoCache) vs cache: \(endTimeCache)")
+        
+        XCTAssertTrue(endTimeNoCache > endTimeCache)
+    }
+    
+    func testCachingVsNoneCachingSimpleCache() {
+        let logger = Logger(label: #function)
+        let barSeries = readBitcoinSeries("BTC")
+        let std = StandardDeviationIndicator(barCount: 15) {barSeries.close}
+        let sma = SMAIndicator(barCount: 10){ std }
+
+        var startTime = Date()
+        calcAllValues(barSeries, sma, 105)
+        let endTimeNoCache = startTime.distance(to: Date())
+        
+        startTime = Date()
+        calcAllValues(barSeries, SimpleCache.of(sma), 5)
+        let endTimeCache = startTime.distance(to: Date())
         
         logger.info("No cache: \(endTimeNoCache) vs cache: \(endTimeCache)")
         
@@ -52,7 +71,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         
         // Create sma indicator that is cached and the cache has a size of first to last bar series and gets updated every second
         let cacheSize = barSeries.bars.last!.beginTime - barSeries.bars.first!.beginTime
-        let smaCached = sma.cached(timeInterval:  cacheSize, updateInterval: 1)
+        let smaCached = DateCache.of(sma, timeSpan: cacheSize, updateInterval: 1)
         
         // check for correcrt values
         for (index, _) in barSeries.bars.enumerated() {
@@ -60,7 +79,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         }
         
         // check for correct cached values count
-        XCTAssertEqual(barSeries.bars.count, smaCached.exportCache(for: barSeries)!.values.count)
+        XCTAssertEqual(barSeries.bars.count, smaCached.exportCache(for: barSeries)!.size)
     
         
         smaCached.clearCache(for: "BTC")
@@ -68,23 +87,23 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let _ = smaCached.calc(barSeries, 0)
         let _ = smaCached.calc(barSeries, 16)
         
-        XCTAssertEqual(smaCached.exportCache(for: barSeries)?.values.count, 2)
+        XCTAssertEqual(smaCached.exportCache(for: barSeries)?.size, 2)
         
         // create another instance with half cache size
-        let smaCached2 = sma.cached(timeInterval:  cacheSize / 2, updateInterval: 1)
+        let smaCached2 = DateCache.of(sma, timeSpan: cacheSize / 2, updateInterval: 1)
         
         // fill cache by calculating all values
         let _ = smaCached2.values(for: barSeries)
         
-        XCTAssertEqual(barSeries.bars.count / 2 + 1, smaCached2.exportCache(for: barSeries)?.values.count)
+        XCTAssertEqual(barSeries.bars.count / 2 + 1, smaCached2.exportCache(for: barSeries)?.size)
         
         // create another instance with very large update intervall
-        let smaCached3 = sma.cached(timeInterval: cacheSize, updateInterval: 1000000)
+        let smaCached3 = DateCache.of(sma, timeSpan: cacheSize, updateInterval: 1000000)
         
         // fill cache by calculating all values
         let _ = smaCached3.values(for: barSeries)
         
-        XCTAssertEqual(barSeries.bars.count, smaCached3.exportCache(for: barSeries)?.values.count)
+        XCTAssertEqual(barSeries.bars.count, smaCached3.exportCache(for: barSeries)?.size)
         
         logger.info("Time for test: \(Date() - startTime)")
     }
@@ -94,7 +113,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let goog = readGoogleSeries("goog")
         
         // update interval is every second, timeSpan is maxvalue -> the cache schould never be cleaned
-        let sma = CachedIndicator.of(btc.sma(barCount: 20), timeSpan: Double.greatestFiniteMagnitude, updateInterval: 1)
+        let sma = DateCache.of(btc.sma(barCount: 20), timeSpan: Double.greatestFiniteMagnitude, updateInterval: 1)
         
         assert(btc.bars != goog.bars)
         XCTAssertNil(sma.exportCache(for: "btc"))
@@ -108,20 +127,19 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let exportedCacheBtc = sma.exportCache(for: "btc")!
         let exportedCacheGoog = sma.exportCache(for: "goog")!
         
-        for (date, value) in btcValues {
-            assertEqualsT(value, exportedCacheBtc.values[date]!)
+        for (index, _) in btcValues.enumerated() {
+            assertEqualsT(btcValues[btc.bars[index].beginTime]!, sma.calc(btc, index))
         }
         
-        for (date, value) in googValues {
-            assertEqualsT(value, exportedCacheGoog.values[date]!)
+        for (index, _) in googValues.enumerated() {
+            assertEqualsT(googValues[goog.bars[index].beginTime]!, sma.calc(goog, index))
         }
         
         // cache should be the size of both bar series bar count
-        XCTAssertEqual(sma.seriesCaches.count, 2)
-        XCTAssertEqual(exportedCacheBtc.values.count + exportedCacheGoog.values.count , goog.bars.count + btc.bars.count)
+        XCTAssertEqual(exportedCacheBtc.size + exportedCacheGoog.size , goog.bars.count + btc.bars.count)
         
         // update interval is max value, timeSpan is one second -> the cache schould never be cleaned
-        let sma2 = CachedIndicator.of(btc.sma(barCount: 20), timeSpan: 1, updateInterval: Double.greatestFiniteMagnitude)
+        let sma2 = DateCache.of(btc.sma(barCount: 20), timeSpan: 1, updateInterval: Double.greatestFiniteMagnitude)
         
         XCTAssertNil(sma2.exportCache(for: "btc"))
         XCTAssertNil(sma2.exportCache(for: "goog"))
@@ -135,16 +153,16 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let exportedCacheGoog2 = sma2.exportCache(for: "goog")!
         
         // check for correct values
-        for (date, value) in btcValues {
-            assertEqualsT(value, exportedCacheBtc2.values[date]!)
+        for (index, _) in btcValues.enumerated() {
+            assertEqualsT(btcValues[btc.bars[index].beginTime]!, sma2.calc(btc, index))
         }
         
-        for (date, value) in googValues {
-            assertEqualsT(value, exportedCacheGoog2.values[date]!)
+        for (index, _) in googValues.enumerated() {
+            assertEqualsT(googValues[goog.bars[index].beginTime]!, sma2.calc(goog, index))
         }
         
-        XCTAssertEqual(exportedCacheBtc2.values.count, btc.bars.count)
-        XCTAssertEqual(exportedCacheGoog2.values.count, goog.bars.count)
+        XCTAssertEqual(exportedCacheBtc2.size, btc.bars.count)
+        XCTAssertEqual(exportedCacheGoog2.size, goog.bars.count)
     }
     
     func testCacheWithDuration(){
@@ -157,14 +175,14 @@ final class CachedIndicatorTest: Ta4swiftTest {
         print("Cache size: \(cacheSize)")
         print("Update intervall: \(updateInterval)")
         
-        let smaCached = CachedIndicator(of: sma, timeSpan: cacheSize, updateInterval: updateInterval)
+        let smaCached = DateCache.of(sma, timeSpan: cacheSize, updateInterval: updateInterval)
         
         for (index, _) in barSeries.bars.enumerated() {
             if index != 0 {
                 let value = smaCached.calc(barSeries, index)
                 let smaValue = sma.calc(barSeries, index)
                 assertEqualsT(value, smaValue)
-                XCTAssertTrue(smaCached.exportCache(for: "BTC")!.values.count < 40)
+                XCTAssertTrue(smaCached.exportCache(for: "BTC")!.size < 40)
                 
             }
         }
@@ -172,6 +190,6 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let exportedCache = smaCached.exportCache(for: "BTC")
         print("BarSeries size \(barSeries.bars.count)")
         print("BarSeries intervall: \(barSeries.bars.last!.beginTime - barSeries.bars.first!.beginTime)")
-        print(exportedCache!.values.count)
+        print(exportedCache!.size)
     }
 }
