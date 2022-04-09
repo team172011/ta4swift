@@ -26,7 +26,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let endTimeNoCache = startTime.distance(to: Date())
         
         startTime = Date()
-        calcAllValues(barSeries, DateCache.of(sma, timeSpan: cacheSize, updateInterval: Double(updateInterval)), 5)
+        calcAllValues(barSeries, sma.cached{DateCache(timeSpan: cacheSize, updateInterval: Double(updateInterval))}, 5)
         let endTimeCache = startTime.distance(to: Date())
         
         logger.info("No cache: \(endTimeNoCache) vs cache: \(endTimeCache)")
@@ -45,7 +45,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let endTimeNoCache = startTime.distance(to: Date())
         
         startTime = Date()
-        calcAllValues(barSeries, SimpleCache.of(sma), 5)
+        calcAllValues(barSeries, sma.cached(), 5)
         let endTimeCache = startTime.distance(to: Date())
         
         logger.info("No cache: \(endTimeNoCache) vs cache: \(endTimeCache)")
@@ -71,7 +71,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         
         // Create sma indicator that is cached and the cache has a size of first to last bar series and gets updated every second
         let cacheSize = barSeries.bars.last!.beginTime - barSeries.bars.first!.beginTime
-        let smaCached = DateCache.of(sma, timeSpan: cacheSize, updateInterval: 1)
+        let smaCached = sma.cached{ DateCache(timeSpan: cacheSize, updateInterval: 1) }
         
         // check for correcrt values
         for (index, _) in barSeries.bars.enumerated() {
@@ -90,7 +90,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         XCTAssertEqual(smaCached.exportCache(for: barSeries)?.size, 2)
         
         // create another instance with half cache size
-        let smaCached2 = DateCache.of(sma, timeSpan: cacheSize / 2, updateInterval: 1)
+        let smaCached2 = sma.cached{ DateCache(timeSpan: cacheSize / 2, updateInterval: 1) }
         
         // fill cache by calculating all values
         let _ = smaCached2.values(for: barSeries)
@@ -98,7 +98,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         XCTAssertEqual(barSeries.bars.count / 2 + 1, smaCached2.exportCache(for: barSeries)?.size)
         
         // create another instance with very large update intervall
-        let smaCached3 = DateCache.of(sma, timeSpan: cacheSize, updateInterval: 1000000)
+        let smaCached3 = sma.cached{ DateCache(timeSpan: cacheSize, updateInterval: 1000000) }
         
         // fill cache by calculating all values
         let _ = smaCached3.values(for: barSeries)
@@ -113,7 +113,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         let goog = readGoogleSeries("goog")
         
         // update interval is every second, timeSpan is maxvalue -> the cache schould never be cleaned
-        let sma = DateCache.of(btc.sma(barCount: 20), timeSpan: Double.greatestFiniteMagnitude, updateInterval: 1)
+        let sma = btc.sma(barCount: 20).cached{DateCache(timeSpan: Double.greatestFiniteMagnitude, updateInterval: 1) }
         
         assert(btc.bars != goog.bars)
         XCTAssertNil(sma.exportCache(for: "btc"))
@@ -139,7 +139,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         XCTAssertEqual(exportedCacheBtc.size + exportedCacheGoog.size , goog.bars.count + btc.bars.count)
         
         // update interval is max value, timeSpan is one second -> the cache schould never be cleaned
-        let sma2 = DateCache.of(btc.sma(barCount: 20), timeSpan: 1, updateInterval: Double.greatestFiniteMagnitude)
+        let sma2 = btc.sma(barCount: 20).cached{ DateCache(timeSpan: 1, updateInterval: Double.greatestFiniteMagnitude) }
         
         XCTAssertNil(sma2.exportCache(for: "btc"))
         XCTAssertNil(sma2.exportCache(for: "goog"))
@@ -175,7 +175,7 @@ final class CachedIndicatorTest: Ta4swiftTest {
         print("Cache size: \(cacheSize)")
         print("Update intervall: \(updateInterval)")
         
-        let smaCached = DateCache.of(sma, timeSpan: cacheSize, updateInterval: updateInterval)
+        let smaCached = sma.cached{ DateCache(timeSpan: cacheSize, updateInterval: updateInterval) }
         
         for (index, _) in barSeries.bars.enumerated() {
             if index != 0 {

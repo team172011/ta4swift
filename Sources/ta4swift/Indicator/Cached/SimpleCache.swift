@@ -36,9 +36,4 @@ public final class SimpleCache: Cache {
         delegate.removeAllValues()
     }
     
-    public static func of(_ indicator: ValueIndicator) -> ValueIndicator {
-        return CachedIndicator(of: indicator) { SimpleCache() }
-    }
-    
-    
 }

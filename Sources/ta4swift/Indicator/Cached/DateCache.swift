@@ -91,14 +91,6 @@ final public class DateCache: Cache {
         cacheCopy.values = self.values
         return cacheCopy
     }
-    
-    static func of(_ indicator: ValueIndicator) -> CachedIndicator {
-        return CachedIndicator(of: indicator){ DateCache()}
-    }
-    
-    static func of(_ indicator: ValueIndicator, timeSpan: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator {
-        return CachedIndicator(of: indicator ) { DateCache(timeSpan: timeSpan, updateInterval: updateInterval) }
-    }
 }
 
 public extension Date {

@@ -31,3 +31,15 @@ extension Cache {
         }
     }
 }
+
+extension ValueIndicator {
+    
+    /**
+     Returns a cached version of this indicator using the provided cache
+     */
+    func cached(cache: @escaping () -> Cache = { return SimpleCache() }) -> CachedIndicator {
+        return CachedIndicator(of: self, cache: cache)
+    }
+    
+    
+}

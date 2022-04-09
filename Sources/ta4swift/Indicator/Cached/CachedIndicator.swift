@@ -14,8 +14,6 @@ import Logging
  */
 public final class CachedIndicator: ValueIndicator {
     
-    public typealias VALUE = Double
-    
     let logger: Logger
     public var calc: (BarSeries, Int) -> Double = {a,b in return 0.0}
     
