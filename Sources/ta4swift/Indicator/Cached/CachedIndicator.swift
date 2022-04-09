@@ -16,27 +16,18 @@ public final class CachedIndicator: ValueIndicator {
     
     let logger: Logger
     public var calc: (BarSeries, Int) -> Double = {a,b in return 0.0}
-    var seriesCaches: Dictionary<String, DateCache> = Dictionary()
     
-    /**
-        Size of cache in seconds e.g. one day or a week
-     */
-    var timeSpan: TimeInterval
+    private var seriesCaches: Dictionary<String, Cache> = Dictionary()
+    private let cache: () -> Cache
     
-    /**
-     How hoften the cache size gets cleaned in seconds e.g. once per day or once in a week
-     */
-    var updateInverval: TimeInterval
-    
-    public init (of indicator: ValueIndicator, timeSpan: TimeInterval = 1, updateInterval: TimeInterval = 1) {
+    public init (of indicator: ValueIndicator, cache: @escaping () -> Cache) {
         self.logger = Logger(label: "CachedIndicator \(indicator)")
-        self.timeSpan = timeSpan
-        self.updateInverval = updateInterval
+        self.cache = cache;
         self.calc = {
             barSeries, index in
             let beginTime = barSeries.bars[index].beginTime
             let seriesCache = self.getSeriesCache(barSeries.name)
-            if let cachedValue = seriesCache.values[beginTime] {
+            if let cachedValue = seriesCache[beginTime] {
                 self.logger.debug("cache hit")
                 return cachedValue
             } else {
@@ -56,29 +47,22 @@ public final class CachedIndicator: ValueIndicator {
         self.seriesCaches[seriesName]?.clear()
     }
     
-    public func exportCache(for series: BarSeries) -> DateCache? {
+    public func exportCache(for series: BarSeries) -> Cache? {
         return exportCache(for: series.name)
     }
     
-    public func exportCache(for seriesName: String) -> DateCache? {
+    public func exportCache(for seriesName: String) -> Cache? {
         return seriesCaches[seriesName]
     }
     
-    private func getSeriesCache(_ seriesName: String) -> DateCache {
+    private func getSeriesCache(_ seriesName: String) -> Cache {
         if let seriesCache = self.seriesCaches[seriesName] {
             return seriesCache
         } else {
-            let seriesCache = DateCache(timeSpan: timeSpan, updateInterval: updateInverval)
+            let seriesCache = cache()
             self.seriesCaches[seriesName] = seriesCache
             return seriesCache
         }
     }
     
-    static func of(_ indicator: ValueIndicator) -> CachedIndicator {
-        return CachedIndicator(of: indicator)
-    }
-    
-    static func of(_ indicator: ValueIndicator, timeSpan: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator {
-        return CachedIndicator(of: indicator, timeSpan: timeSpan, updateInterval: updateInterval)
-    }
 }

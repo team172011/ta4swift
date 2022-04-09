@@ -23,16 +23,7 @@ public protocol ValueIndicator {
      Returns an Map<Date, Value> of all calculated values for this bar series
      */
     func valueMap(for barSeries: BarSeries) -> Dictionary<Date, Double>
-    
-    /**
-     The cached version of this indicator
-     */
-    func cached () -> CachedIndicator
-    
-    /**
-     The cached version of this indicator
-     */
-    func cached(timeInterval: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator
+
     
     /**
      Creates a new ValueIndicator that calculates the sum of this indicator and the given indicator
@@ -135,19 +126,6 @@ public extension ValueIndicator {
     
     func abs() -> ValueIndicator {
         UnaryOperation.abs(indicator: self)
-    }
-    
-    func cached() -> CachedIndicator {
-        return CachedIndicator(of: self)
-    }
-    
-    /**
-     Creates a cached version of this inidcator
-        - timeInteral:          the size of the cache in seconds (e.g. the cache should store values for one minute = 60 or one day = 60 * 24)
-        - updateInterval:    the update intervale in seconds (e.g. how often should the cache be updated and remove old values)
-     */
-    func cached(timeInterval: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator {
-        return CachedIndicator(of: self, timeSpan: timeInterval, updateInterval: updateInterval)
     }
 }
 
