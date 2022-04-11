@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ClosePriceIndicator.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 09.02.22.

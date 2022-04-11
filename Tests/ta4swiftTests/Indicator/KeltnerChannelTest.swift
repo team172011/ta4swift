@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  KeltnerChannelTest.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 12.03.22.

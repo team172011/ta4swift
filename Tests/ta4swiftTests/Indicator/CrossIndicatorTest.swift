@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CrossIndicatorTest.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 04.02.22.

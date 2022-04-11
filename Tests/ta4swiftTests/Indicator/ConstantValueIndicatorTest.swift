@@ -1,3 +1,10 @@
+//
+//  ConstantValueIndicatorTest.swift
+//
+//
+//  Created by Simon-Justus Wimmer on 25.01.22.
+//
+
 import XCTest
 @testable import ta4swift
 
