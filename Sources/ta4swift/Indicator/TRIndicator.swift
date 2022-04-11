@@ -12,7 +12,7 @@ import Foundation
  */
 public struct TRIndicator: ValueIndicator {
     
-    public var calc: calcFuncTypeValue = {
+    public var calc: (BarSeries, Int) -> Double = {
         barSeries, index in
         let bar = barSeries.bars[index]
         let ts = bar.highPrice - bar.lowPrice

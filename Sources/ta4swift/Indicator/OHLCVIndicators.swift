@@ -9,25 +9,25 @@ import Foundation
 
 public struct ClosePriceIndicator: ValueIndicator {
     public var cached: Bool { get { false }}
-    public var calc: calcFuncTypeValue = {$0.bars[$1].closePrice}
+    public var calc: (BarSeries, Int) -> Double = {$0.bars[$1].closePrice}
 }
 
 public struct OpenPriceIndicator: ValueIndicator {
     public var cached: Bool = false
-    public var calc: calcFuncTypeValue = {$0.bars[$1].openPrice}
+    public var calc: (BarSeries, Int) -> Double = {$0.bars[$1].openPrice}
 }
 
 public struct HighPriceIndicator: ValueIndicator {
     public var cached: Bool = false
-    public var calc: calcFuncTypeValue = {$0.bars[$1].highPrice}
+    public var calc: (BarSeries, Int) -> Double = {$0.bars[$1].highPrice}
 }
 
 public struct LowPriceIndicator: ValueIndicator {
     public var cached: Bool = false
-    public var calc: calcFuncTypeValue = {$0.bars[$1].lowPrice}
+    public var calc: (BarSeries, Int) -> Double = {$0.bars[$1].lowPrice}
 }
 
 public struct VolumePriceIndicator: ValueIndicator {
     public var cached: Bool = false
-    public var calc: calcFuncTypeValue = {Double($0.bars[$1].volume)}
+    public var calc: (BarSeries, Int) -> Double = {Double($0.bars[$1].volume)}
 }

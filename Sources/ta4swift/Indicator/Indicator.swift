@@ -5,17 +5,14 @@
 //
 import Foundation
 
-public typealias calcFuncTypeValue = (BarSeries, Int) -> Double
-public typealias calcFuncTypeBool = (BarSeries, Int) -> Bool
-public typealias valueCacheType = (@escaping calcFuncTypeValue) -> calcFuncTypeValue
 
 public protocol BooleanIndicator {
-    var calc: calcFuncTypeBool { get }
+    var calc: (BarSeries, Int) -> Bool { get }
 }
 
 public protocol ValueIndicator {
     
-    var calc: calcFuncTypeValue { get }
+    var calc: (BarSeries, Int) -> Double { get }
     
     /*
      Returns an array of all calculated values for this bar series
@@ -26,60 +23,51 @@ public protocol ValueIndicator {
      Returns an Map<Date, Value> of all calculated values for this bar series
      */
     func valueMap(for barSeries: BarSeries) -> Dictionary<Date, Double>
-    
-    /**
-     The cached version of this indicator
-     */
-    func cached() -> CachedIndicator<Self>
-    
-    /**
-     The cached version of this indicator
-     */
-    func cached(timeInterval: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator<Self>
+
     
     /**
      Creates a new ValueIndicator that calculates the sum of this indicator and the given indicator
      */
-    func plus<T: ValueIndicator>(_ indicator: T) -> RawIndicator
+    func plus(_ indicator: ValueIndicator) -> ValueIndicator
     
     /**
      Creates a new ValueIndicator that calculates the difference of this indicator and the given indicator
      */
-    func minus<T: ValueIndicator>(_ indicator: T) -> RawIndicator
+    func minus(_ indicator: ValueIndicator) -> ValueIndicator
     
     /**
      Creates a new ValueIndicator that calculates the product of this indicator and the given indicator
      */
-    func multiply<T: ValueIndicator>(_ indicator: T) -> RawIndicator
+    func multiply(_ indicator: ValueIndicator) -> ValueIndicator
     
-    func multiply(_ value: Double) -> RawIndicator
+    func multiply(_ value: Double) -> ValueIndicator
     
     /**
      Creates a new ValueIndicator that calculates the divisor of this indicator and the given indicator
      */
-    func divide<T: ValueIndicator>(_ indicator: T) -> RawIndicator
+    func divide(_ indicator: ValueIndicator) -> ValueIndicator
     
-    func divide(_ value: Double) -> RawIndicator
+    func divide(_ value: Double) -> ValueIndicator
     
     /**
      Creates a new ValueIndicator that calculates the minimum value between this indicator and the given indicator
      */
-    func min<T: ValueIndicator>(_ indicator: T) -> RawIndicator
+    func min(_ indicator: ValueIndicator) -> ValueIndicator
     
     /**
      Creates a new ValueIndicator that calculates the sum of this indicator and the given indicator
      */
-    func max<T: ValueIndicator>(_ indicator: T) -> RawIndicator
+    func max(_ indicator: ValueIndicator) -> ValueIndicator
     
     /**
      Creates a ValueIndicator that calculates the square root of this indicator
      */
-    func sqrt() -> RawIndicator
+    func sqrt() -> ValueIndicator
     
     /**
      Creates a ValueIndicator that calculates the absolute value of this indicator
      */
-    func abs() -> RawIndicator
+    func abs() -> ValueIndicator
 }
 
 public extension ValueIndicator {
@@ -100,57 +88,44 @@ public extension ValueIndicator {
         return values
     }
     
-    func plus<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        RawIndicator{BinaryOperation.sum(left: self, right: indicator)}
+    func plus(_ indicator: ValueIndicator) -> ValueIndicator {
+        BinaryOperation.sum(left: self, right: indicator)
     }
     
-    func minus<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-         RawIndicator { BinaryOperation.difference(left: self, right: indicator) }
+    func minus(_ indicator: ValueIndicator) -> ValueIndicator {
+         BinaryOperation.difference(left: self, right: indicator)
      }
      
-    func multiply<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        RawIndicator { BinaryOperation.product(left: self, right: indicator) }
+    func multiply(_ indicator: ValueIndicator) -> ValueIndicator {
+         BinaryOperation.product(left: self, right: indicator)
     }
     
-    func multiply(_ value: Double) -> RawIndicator {
+    func multiply(_ value: Double) -> ValueIndicator {
         multiply(ConstantValueIndicator{value})
     }
     
-    func divide<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        RawIndicator{ BinaryOperation.quotient(left: self, right: indicator) }
+    func divide(_ indicator: ValueIndicator) -> ValueIndicator {
+        BinaryOperation.quotient(left: self, right: indicator)
     }
     
-    func divide(_ value: Double) -> RawIndicator {
+    func divide(_ value: Double) -> ValueIndicator {
         divide(ConstantValueIndicator{value})
     }
     
-    func min<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        RawIndicator{ BinaryOperation.min(left: self, right: indicator) }
+    func min(_ indicator: ValueIndicator) -> ValueIndicator {
+        BinaryOperation.min(left: self, right: indicator)
     }
     
-    func max<T>(_ indicator: T) -> RawIndicator where T : ValueIndicator {
-        RawIndicator{ BinaryOperation.max(left: self, right: indicator) }
+    func max(_ indicator: ValueIndicator) -> ValueIndicator {
+        BinaryOperation.max(left: self, right: indicator)
     }
     
-    func sqrt() -> RawIndicator {
-        RawIndicator{ UnaryOperation.sqrt(indicator: self) }
+    func sqrt() -> ValueIndicator {
+        UnaryOperation.sqrt(indicator: self)
     }
     
-    func abs() -> RawIndicator {
-        RawIndicator { UnaryOperation.abs(indicator: self)}
-    }
-    
-    func cached() -> CachedIndicator<Self> {
-        return CachedIndicator(of: self)
-    }
-    
-    /**
-     Creates a cached version of this inidcator
-        - timeInteral:          the size of the cache in seconds (e.g. the cache should store values for one minute = 60 or one day = 60 * 24)
-        - updateInterval:    the update intervale in seconds (e.g. how often should the cache be updated and remove old values)
-     */
-    func cached(timeInterval: TimeInterval, updateInterval: TimeInterval) -> CachedIndicator<Self> {
-        return CachedIndicator(of: self, timeSpan: timeInterval, updateInterval: updateInterval)
+    func abs() -> ValueIndicator {
+        UnaryOperation.abs(indicator: self)
     }
 }
 

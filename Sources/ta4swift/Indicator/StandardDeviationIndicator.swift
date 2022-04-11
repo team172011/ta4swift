@@ -9,9 +9,9 @@ import Foundation
 
 public struct StandardDeviationIndicator: ValueIndicator {
     
-    public var calc: calcFuncTypeValue
+    public var calc: (BarSeries, Int) -> Double
     
-    public init<T: ValueIndicator>(barCount: Int, _ base: () -> T){
+    public init(barCount: Int, _ base: () -> ValueIndicator){
         self.calc = VarianceIndicator(barCount: barCount, base).sqrt().calc
     }
 }

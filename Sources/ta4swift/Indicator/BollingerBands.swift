@@ -8,27 +8,25 @@
 import Foundation
 import CoreData
 
-public class BollingerBands<MIDDLE: ValueIndicator,
-    UPPER: ValueIndicator,LOWER: ValueIndicator,
-    BASE: ValueIndicator, PERCENTB: ValueIndicator>{
+public class BollingerBands {
     
-    let base: BASE
+    let base: ValueIndicator
     
-    let lower: LOWER
-    let middle: MIDDLE
-    let upper: UPPER
-    let percentB: PERCENTB
+    let lower: ValueIndicator
+    let middle: ValueIndicator
+    let upper: ValueIndicator
+    let percentB: ValueIndicator
     /**
     Creates bollinger bands indicators based on the close price for given bar count and multiplier
      */
-    public convenience init(barCount: Int, multiplier: Double) where BASE == ClosePriceIndicator, MIDDLE == SMAIndicator, UPPER == RawIndicator, LOWER == RawIndicator, PERCENTB == RawIndicator {
+    public convenience init(barCount: Int, multiplier: Double) {
         self.init(base: ClosePriceIndicator(), barCount: barCount, multiplier: multiplier)
     }
     
     /**
     Creates bollinger bands indicators based on the given indicator,  bar count and multiplier
      */
-    public convenience init(base: BASE, barCount: Int, multiplier: Double) where MIDDLE == SMAIndicator, UPPER == RawIndicator, LOWER == RawIndicator, PERCENTB == RawIndicator {
+    public convenience init(base: ValueIndicator, barCount: Int, multiplier: Double) {
         let stdev = StandardDeviationIndicator(barCount: barCount){ base }
         let middle = SMAIndicator(barCount: barCount) { base }
         let upper = middle.plus(stdev.multiply(multiplier))
@@ -36,7 +34,7 @@ public class BollingerBands<MIDDLE: ValueIndicator,
         self.init(base: base, lower: lower, middle: middle, upper: upper)
     }
     
-    public init(base: BASE, lower: LOWER, middle: MIDDLE, upper: UPPER) where MIDDLE == SMAIndicator, PERCENTB == RawIndicator{
+    public init(base: ValueIndicator, lower: ValueIndicator, middle: ValueIndicator, upper: ValueIndicator) {
         self.base = base
         self.middle = middle
         self.upper = upper

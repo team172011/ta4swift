@@ -14,7 +14,7 @@ import Foundation
 
 public struct CCIIndicator: ValueIndicator {
     
-    public var calc: calcFuncTypeValue
+    public var calc: (BarSeries, Int) -> Double
     
     public init(barCount: () -> Int) {
         let factor = 0.015

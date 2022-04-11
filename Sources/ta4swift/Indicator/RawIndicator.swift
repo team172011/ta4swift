@@ -11,12 +11,12 @@
  */
 public struct RawIndicator: ValueIndicator {
     
-    public var calc: calcFuncTypeValue
+    public var calc: (BarSeries, Int) -> Double
     
     /**
      Creates a RawIndicator with the provided formular.
      */
-    public init( _ formular: @escaping () -> calcFuncTypeValue) {
+    public init( _ formular: @escaping () -> (BarSeries, Int) -> Double) {
         self.calc = formular()
     }
     

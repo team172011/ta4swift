@@ -9,7 +9,7 @@ import Foundation
 
 public struct SMAIndicator: ValueIndicator {
     
-    public var calc: calcFuncTypeValue
+    public var calc: (BarSeries, Int) -> Double
     
     /**
      Creates an SMA indicator based on the close price
@@ -21,9 +21,9 @@ public struct SMAIndicator: ValueIndicator {
     /**
      Creates an SMA indicator based on the given indicator
      */
-    public init<T: ValueIndicator>(barCount: Int, _ base: () -> T) {
+    public init(barCount: Int, _ base: () -> ValueIndicator) {
         let indicator = base()
-        let calc: calcFuncTypeValue = { barSeries, index in
+        let calc: (BarSeries, Int) -> Double = { barSeries, index in
             var sum = 0.0
             for i in 0.max(index - barCount + 1)...index {
                 sum += indicator.calc(barSeries, i)

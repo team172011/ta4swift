@@ -12,9 +12,9 @@ import Foundation
  */
 public struct MMAIndicator: ValueIndicator {
    
-    public var calc: calcFuncTypeValue
+    public var calc: (BarSeries, Int) -> Double
     
-    public init<T>(barCount: Int, _ base: () -> T) where T: ValueIndicator {
+    public init(barCount: Int, _ base: () -> ValueIndicator) {
         self.calc = EMAIndicator(barCount: barCount, multiplier: 1.0 / Double(barCount), base).calc
     }
 }
