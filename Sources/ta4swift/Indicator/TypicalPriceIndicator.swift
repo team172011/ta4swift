@@ -1,5 +1,5 @@
 //
-//  File 2.swift
+//  TypicalPriceIndicator.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 03.03.22.

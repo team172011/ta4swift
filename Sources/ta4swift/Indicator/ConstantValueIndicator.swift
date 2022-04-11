@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  ConstantValueIndicator.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 30.01.22.

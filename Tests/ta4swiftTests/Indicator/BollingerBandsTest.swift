@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  BollingerBandsIndicatorTest.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 17.02.22.

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SMAIndicatorTest.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 25.01.22.

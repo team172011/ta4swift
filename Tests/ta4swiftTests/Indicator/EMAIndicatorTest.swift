@@ -1,5 +1,5 @@
 //
-//  File 2.swift
+//  EMAIndicatorTest.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 25.01.22.
