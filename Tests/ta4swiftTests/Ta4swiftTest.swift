@@ -93,6 +93,15 @@ public class Ta4swiftTest: XCTestCase {
         return bars
     }
     
+    func createBars(_ closeAndVolume: (Double, Int)...) -> [Bar] {
+        var bars = [Bar]()
+        let now = Date()
+        for (index, price) in closeAndVolume.enumerated() {
+            bars.append(createBar(price, now + TimeInterval((index * 60))))
+        }
+        return bars
+    }
+    
     func createBarsFixed(_ closePrices: Double...) -> [Bar] {
         var bars = [Bar]()
         let now = Date()
@@ -108,6 +117,13 @@ public class Ta4swiftTest: XCTestCase {
         let open = Double.random(in: low...high)
         let volume = Int.random(in: 1...100000)
         return createBar(open, high, low, close, volume, date)
+    }
+    
+    func createBar(_ closeAndVolume: (Double, Int), _ date: Date) -> Bar {
+        let high = Double.random(in: closeAndVolume.0...closeAndVolume.0*2)
+        let low = Double.random(in: closeAndVolume.0*0.5...closeAndVolume.0)
+        let open = Double.random(in: low...high)
+        return createBar(open, high, low, closeAndVolume.0, closeAndVolume.1, date)
     }
     
     func createBar(_ open: Double, _ high: Double, _ low: Double, _ close: Double, _ volume: Int, _ date: Date) -> Bar {

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  MMAIndicator.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 20.02.22.

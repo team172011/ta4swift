@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CCIIndicator.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 03.03.22.
@@ -10,8 +10,6 @@ import Foundation
 /**
  * Commodity Channel Index (CCI) indicator.
  */
-
-
 public struct CCIIndicator: ValueIndicator {
     
     public var calc: (BarSeries, Int) -> Double

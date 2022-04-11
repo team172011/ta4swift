@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  CrossedIndicator.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 23.01.22.

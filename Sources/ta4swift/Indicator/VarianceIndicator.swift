@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  VarianceIndicator.swift
 //  
 //
 //  Created by Simon-Justus Wimmer on 16.02.22.
